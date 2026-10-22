@@ -1,0 +1,157 @@
+# PRODUCT-LEVEL refinements: the "semantic, not literal" layer on top of the category rules.
+# Category rules (work_rules.yaml) give every product of a category the same set of works. In mixed
+# categories (screws, dowels, mounting glue, discs, profiles, sealants, protective gear, hand tools)
+# that is wrong for most products. A refinement rule is EXCLUSIVE: when one or more match, the
+# product gets ONLY the union of the matching refinements (the more specific rule wins over the
+# category rules). `cat` is a regex over the lower-case lifted category path, `name` over the
+# lower-case product name, `not_name` excludes. Roles: m material, t tool, c consumable.
+# Written from what each product family is used for (manufacturer application notes and the labelling
+# policy in docs/TAXONOMY.md), NOT tuned on a labelled set; see docs/EVAL_METHODOLOGY.md.
+rules:
+  # ---------------------------------------------------------------- screws, dowels, anchors
+  - {id: screw-drywall, cat: "саморезы, шурупы", name: "гипсокартон|гкл|по гипсокартону",
+     works: {drywall_install: m}}
+  - {id: screw-profile, cat: "саморезы, шурупы", name: "тонких пластин|для профил|прессшайб|клоп",
+     works: {drywall_install: m, general_assembly: m}}
+  - {id: screw-general, cat: "саморезы, шурупы",
+     not_name: "гипсокартон|гкл|тонких пластин|прессшайб|клоп",
+     works: {general_assembly: m}}
+  - {id: dowel-insulation, cat: "дюбели", name: "теплоизоляц",
+     works: {insulation: m}}
+  - {id: dowel-drywall, cat: "дюбели", name: "гипсокартон|гкл|листовых",
+     works: {drywall_install: m}}
+  - {id: dowel-general, cat: "дюбели", not_name: "теплоизоляц|гипсокартон|гкл|листовых",
+     works: {general_assembly: m}}
+  # ---------------------------------------------------------------- mounting glue and sealants
+  - {id: glue-gkl, cat: "клей монтажный|смеси монтажные", name: "гкл|гипсокартон|пгп",
+     works: {drywall_install: m, masonry: m}}
+  - {id: glue-foam, cat: "клей монтажный|клей для стиропора",
+     name: "пенополистирол|стиропор|пенопласт|потолочн",
+     works: {ceiling_install: m, cornice_install: m, insulation: m}}
+  - {id: glue-mirror, cat: "клей монтажный", name: "зеркал", works: {general_assembly: m}}
+  - {id: glue-sealant, cat: "клей монтажный", name: "герметик",
+     works: {sealing: m, general_assembly: m}}
+  - {id: glue-universal, cat: "клей монтажный", not_name: "гкл|гипсокартон|пгп|пенополистирол|стиропор|пенопласт|потолочн|зеркал|герметик|для панелей",
+     works: {general_assembly: m, skirting_install: m, wall_panels: m}}
+  - {id: sealant-sanitary, cat: "герметики", name: "санитарн",
+     works: {sealing: m, plumbing_fixtures: m, tile_laying: m}}
+  - {id: sealant-wood, cat: "герметики", name: "по дереву|для паркета|паркет",
+     works: {sealing: m, laminate_laying: m}}
+  - {id: sealant-bitumen, cat: "герметики", name: "битум|кровл",
+     works: {sealing: m, waterproofing: m}}
+  # ---------------------------------------------------------------- cutting and sawing consumables
+  - {id: blade-laminate, cat: "расходные материалы для электроинструмента", name: "по ламинату",
+     works: {laminate_laying: c, general_assembly: c}}
+  - {id: disc-concrete, cat: "диски отрезные алмазные", name: "по бетон|по кирпич|по камн|сегмент",
+     works: {demolition: c, masonry: c}}
+  - {id: disc-tile, cat: "диски отрезные алмазные", name: "по плитк|по керамик|керамогранит|плиткорез",
+     works: {tile_laying: c}}
+  - {id: saw-drywall, cat: "ножовки", name: "по гипсокартон", works: {drywall_install: t}}
+  # ---------------------------------------------------------------- trims and profiles
+  - {id: profile-tile, cat: "закладки для плитки|уголки и бордюры для плитки|профили для плитки",
+     works: {tile_laying: m}}
+  - {id: profile-ceiling, cat: "аксессуары и комплектующие к потолкам|потолки реечные",
+     works: {ceiling_install: m}}
+  - {id: profile-pvc-panel, cat: "комплектующие к панелям", works: {wall_panels: m, ceiling_install: m}}
+  - {id: threshold, cat: "профиль угловой|пороги", name: "порог", works: {skirting_install: m}}
+  - {id: drywall-hanger, cat: "профили и аксессуары для гипсокартона", name: "подвес",
+     works: {drywall_install: m}}
+  # ---------------------------------------------------------------- hand tools
+  - {id: trowel-notched, cat: "шпатели", name: "зубчат", works: {tile_laying: t, linoleum_laying: t}}
+  - {id: spatula-facade, cat: "шпатели", name: "фасадн", works: {puttying: t, plastering: t}}
+  - {id: spatula-paint, cat: "шпатели", name: "малярн", works: {puttying: t, surface_cleaning: t}}
+  - {id: wallpaper-kit, cat: "наборы мши", name: "обо", works: {wallpapering: t}}
+  - {id: wrench-adjustable, cat: "ключи разводные",
+     works: {pipe_laying: t, faucet_install: t, general_assembly: t}}
+  - {id: marking, cat: "отвесы, шнуры разметочные|маркеры разметочные|угломеры, угольники",
+     works: {general_assembly: t}}
+  - {id: multitool, cat: "многофункциональный инструмент", name: "реноватор",
+     works: {general_assembly: t, demolition: t}}
+  # ---------------------------------------------------------------- protective gear
+  - {id: ppe, cat: "средства защиты|каски, шлемы|перчатки|очки защитные|респираторы|маски, очки сварочные|пояса, стропы",
+     works: {ppe_consumables: c}}
+  # ---------------------------------------------------------------- primers by purpose
+  - {id: primer-decor, cat: "грунтовка|покрытия декоративные", name: "декоративн|dekor|декор",
+     works: {priming: m, decorative_coating: m}}
+  - {id: primer-concrete-contact, cat: "грунтовка|мастики и праймеры", name: "бетонконтакт|бетон-контакт",
+     works: {priming: m, plastering: c, screed: c}}
+  - {id: primer-adhesion, cat: "грунтовка", name: "адгезион|мебел",
+     works: {priming: m, wood_metal_coating: c, decorative_coating: c}}
+  # ---------------------------------------------------------------- painting tools by tool type
+  - {id: roller-needle, cat: "валики игольчатые", works: {self_leveling: t}}
+  - {id: roller-press, cat: "валики прижимные", works: {wallpapering: t}}
+  - {id: roller-paint, cat: "валики|ручки для валиков|ванночки для краски",
+     not_name: "игольчат|прижимн", works: {wall_painting: t, ceiling_painting: t}}
+  - {id: paint-set, cat: "наборы мши", name: "валик|ванночк|малярн",
+     not_name: "обо", works: {wall_painting: t, ceiling_painting: t}}
+  - {id: brush-flat, cat: "кисти малярные", works: {wall_painting: t, wood_metal_coating: t}}
+  - {id: grout-sponge, cat: "сопутствующий малярный инструмент|губки", name: "затирк|плитк",
+     works: {grouting: t, tile_laying: t}}
+  # ---------------------------------------------------------------- cutting tools
+  - {id: knife, cat: "ножи строительные|лезвия для ножей",
+     works: {general_assembly: t, drywall_install: t, wallpapering: t}}
+  - {id: tile-roller, cat: "ножи строительные|плиткорез", name: "плиткорез", works: {tile_laying: t}}
+  - {id: shears-cable, cat: "строительные ножницы", name: "кабел", works: {cable_laying: t}}
+  - {id: shears-metal, cat: "строительные ножницы", name: "по металлу",
+     works: {general_assembly: t, drywall_install: t}}
+  - {id: shears-household, cat: "строительные ножницы", name: "бытов", works: {}}
+  - {id: saw-aerated, cat: "ножовки", name: "газобетон|пенобетон", works: {masonry: t}}
+  - {id: saw-wood, cat: "ножовки", name: "по дереву|по металлу", works: {general_assembly: t}}
+  - {id: blade-foam, cat: "пилки для лобзиков", name: "пенополистирол|пенопласт|гофрокартон",
+     works: {insulation: c, general_assembly: c}}
+  # ---------------------------------------------------------------- other glues, foams, sealants
+  - {id: glue-misc, cat: "клей эпоксидный|клей универсальный|клей специальный",
+     works: {general_assembly: m}}
+  - {id: glue-foam-pu, cat: "клей-пены", name: "гипсокартон|гкл", works: {drywall_install: m, insulation: m}}
+  - {id: foam, cat: "пены (профессиональные|бытовые)",
+     works: {door_install: m, window_install: m, sealing: m, insulation: m}}
+  - {id: sealant-silicone, cat: "герметики", name: "силиконов", not_name: "санитарн|влажн",
+     works: {sealing: m}}
+  - {id: sealant-rubber, cat: "герметики", name: "каучуков|жидкая резина",
+     works: {sealing: m, waterproofing: m}}
+  - {id: gasket-radiator, cat: "уплотнители и герметизирующие", name: "радиатор",
+     works: {heating_install: m}}
+  # ---------------------------------------------------------------- diamond discs without a stated base
+  - {id: disc-universal, cat: "диски отрезные алмазные", not_name: "по бетон|по кирпич|по камн|сегмент|по плитк|по керамик|керамогранит",
+     works: {demolition: c, masonry: c, tile_laying: c}}
+  - {id: cornice-curtain, cat: "интерьер > карнизы", works: {cornice_install: m}}
+  - {id: anchor-bolt, cat: "анкеры|болты, гайки", works: {general_assembly: m}}
+  # ---------------------------------------------------------------- second round (errors found on pilot C)
+  - {id: mastic-waterproof, cat: "мастики и праймеры", name: "гидроизоляц|битум|мастика",
+     works: {waterproofing: m}}
+  - {id: tape-bitumen, cat: "аксессуары для гидроизоляции", name: "битум",
+     works: {waterproofing: m, sealing: m}}
+  - {id: sealant-gun, cat: "пистолеты для герметика", works: {sealing: t}}
+  - {id: levels-screwdrivers, cat: "уровни|отвертки|рулетки|угольники", works: {general_assembly: t}}
+  - {id: spatula-wallpaper, cat: "шпатели", name: "обо", works: {wallpapering: t}}
+  - {id: spatula-rubber, cat: "шпатели", name: "резинов|затирк", works: {grouting: t}}
+  - {id: tape-double, cat: "ленты малярные, клейкие", name: "двусторон", works: {general_assembly: m}}
+  - {id: mesh-tape, cat: "сетки малярные, серпянка", name: "серпянк|стекловолокон",
+     works: {puttying: m, drywall_install: m}}
+  - {id: mesh-plaster, cat: "сетки малярные, серпянка", name: "штукатурн",
+     works: {plastering: m}}
+  - {id: glue-foam-insul, cat: "клей-пены", name: "теплоизоляц", works: {insulation: m}}
+  - {id: polish-wheel, cat: "круги полировальные", works: {surface_cleaning: c, wood_metal_coating: c}}
+  - {id: glue-panels, cat: "клей монтажный", name: "для панелей", works: {wall_panels: m, general_assembly: m}}
+
+  # ---------------------------------------------------------------- policy decisions of 2026-10-21
+  # (docs/TAXONOMY.md section 5). Decided by the team, not tuned on any test error.
+  # Universal primer: floors ONLY if the card says so (для пола / универсальная / для оснований).
+  - {id: primer-floor, cat: "грунтовка|мастики и праймеры",
+     text: "для пол|универсальн|для основани",
+     not_text: "декоративн|dekor|адгезион|мебел|бетонконтакт|бетон-контакт",
+     works: {priming: m, wall_painting: c, ceiling_painting: c, tile_laying: c, wallpapering: c,
+             puttying: c, plastering: c, screed: c, self_leveling: c}}
+  - {id: primer-walls, cat: "грунтовка", not_text: "для пол|универсальн|для основани",
+     not_name: "декоративн|dekor|адгезион|мебел|бетонконтакт|бетон-контакт",
+     works: {priming: m, wall_painting: c, ceiling_painting: c, tile_laying: c, wallpapering: c,
+             puttying: c, plastering: c}}
+  - {id: primer-waterproofing-text, cat: "грунтовка", text: "гидроизоляц|влагоизол",
+     not_name: "декоративн|dekor|адгезион|мебел|бетонконтакт|бетон-контакт",
+     works: {waterproofing: c}}
+  # Decorative profiles, moldings, ceiling baseboards -> "Монтаж плинтусов и молдингов".
+  - {id: decor-profile, cat: "профили (п|ш|т|н|г|l)-образные|профили декоративные|профиль угловой|багет|молдинг|галтел|плинтусы потолочные|углы для плинтуса|декоративные элементы и комплектующие для карнизов",
+     not_name: "порог|для плитки|торцевой",
+     works: {skirting_install: m}}
+  - {id: panel-corner, cat: "комплектующие к панелям", name: "уголок|молдинг|галтел|плинтус",
+     works: {skirting_install: m, wall_panels: c}}

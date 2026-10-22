@@ -1,0 +1,12 @@
+# Units for bare-number characteristics of the official dump (products_final.json).
+# The card says "Расход материала: 140" without a unit. Evidence in the file itself (the marketing
+# text of the same cards says "150 г/м2", "200 г/кв.м", "0,1 л/м2"): coating consumption is a
+# mass/volume per m2 of ONE layer; values < 1 are litres per m2, values >= 10 are grams per m2;
+# 1..10 is ambiguous (m2/l? kg/m2?) and is left WITHOUT a unit, so nothing is invented.
+# A range "a-b" is taken at its upper bound (the buyer must not run short).
+consumption:
+  key: "Расход материала"
+  families: 'краск|эмал|лак|антисепт|грунт|морилк|масл|мастик|праймер|пропитк|лазур|олиф|колер'
+  litres_below: 1        # max(value) < 1       -> л/м2
+  grams_from: 10         # max(value) >= 10     -> г/м2
+  max_grams: 3000        # larger numbers are not per-layer consumption (e.g. "1000" per pack)

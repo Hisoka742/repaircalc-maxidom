@@ -1,0 +1,197 @@
+{
+  "products": 88790,
+  "skipped": 0,
+  "total_seconds": 140.0,
+  "machine": {
+    "cpu": "Intel64 Family 6 Model 158 Stepping 10, GenuineIntel",
+    "cores_logical": 8,
+    "cores_physical": 4,
+    "ram_gb": 15.8,
+    "os": "Windows 10",
+    "python": "3.12.3",
+    "gpu": null
+  },
+  "stages": {
+    "1 ingest + normalize": {
+      "seconds": 17.74,
+      "peak_rss_mb": 571,
+      "cpu_percent": 100,
+      "items": 88790,
+      "per_1000_s": 0.2
+    },
+    "2 attribute extraction (regex)": {
+      "seconds": 23.0,
+      "peak_rss_mb": 640,
+      "cpu_percent": 99,
+      "items": 88790,
+      "per_1000_s": 0.259
+    },
+    "3 calculator-type matching (rules)": {
+      "seconds": 50.33,
+      "peak_rss_mb": 708,
+      "cpu_percent": 99,
+      "items": 88790,
+      "per_1000_s": 0.567
+    },
+    "4 work-type matching (rules + model)": {
+      "seconds": 22.85,
+      "peak_rss_mb": 1274,
+      "cpu_percent": 100,
+      "items": 88790,
+      "per_1000_s": 0.257
+    },
+    "5 entries + calculator readiness": {
+      "seconds": 24.93,
+      "peak_rss_mb": 956,
+      "cpu_percent": 99,
+      "items": 88790,
+      "per_1000_s": 0.281
+    }
+  },
+  "with_work_types": 42273,
+  "review_queue": 63,
+  "works_per_product": {
+    "0": 46517,
+    "1": 32006,
+    "2": 5820,
+    "3": 2801,
+    "4": 915,
+    "5": 188,
+    "6": 434,
+    "7": 72,
+    "8": 11,
+    "9": 19,
+    "10": 7
+  },
+  "attrs_extracted_products": 56099,
+  "readiness": {
+    "drywall": {
+      "total": 23,
+      "ready": 21,
+      "share": 0.913
+    },
+    "grout": {
+      "total": 206,
+      "ready": 205,
+      "share": 0.995
+    },
+    "laminate": {
+      "total": 547,
+      "ready": 463,
+      "share": 0.846
+    },
+    "paint": {
+      "total": 1088,
+      "ready": 703,
+      "share": 0.646
+    },
+    "primer": {
+      "total": 169,
+      "ready": 131,
+      "share": 0.775
+    },
+    "putty": {
+      "total": 92,
+      "ready": 87,
+      "share": 0.946
+    },
+    "self_leveling": {
+      "total": 6,
+      "ready": 6,
+      "share": 1.0
+    },
+    "tile": {
+      "total": 1949,
+      "ready": 1569,
+      "share": 0.805
+    },
+    "tile_adhesive": {
+      "total": 3,
+      "ready": 3,
+      "share": 1.0
+    },
+    "tile_spacers": {
+      "total": 1,
+      "ready": 0,
+      "share": 0.0
+    },
+    "underlay": {
+      "total": 22,
+      "ready": 22,
+      "share": 1.0
+    },
+    "wallpaper": {
+      "total": 1572,
+      "ready": 1365,
+      "share": 0.868
+    },
+    "waterproofing": {
+      "total": 61,
+      "ready": 46,
+      "share": 0.754
+    }
+  },
+  "in_scope_products": 44999,
+  "out_of_scope_products": 43791,
+  "in_scope_with_work_types": 41801,
+  "calc_auto": 28581,
+  "calc_review_in_scope": 20526,
+  "calc_auto_in_scope": 24473,
+  "focus_readiness": {
+    "Керамогранит напольный": {
+      "calc": "tile",
+      "total": 951,
+      "typed": 950,
+      "ready": 899
+    },
+    "Плитка настенная для ванной": {
+      "calc": "tile",
+      "total": 577,
+      "typed": 577,
+      "ready": 482
+    },
+    "Краски для стен и потолков": {
+      "calc": "paint",
+      "total": 427,
+      "typed": 379,
+      "ready": 376
+    },
+    "Обои": {
+      "calc": "wallpaper",
+      "total": 1297,
+      "typed": 1297,
+      "ready": 1297
+    },
+    "Шпатлевки готовые": {
+      "calc": "putty",
+      "total": 48,
+      "typed": 47,
+      "ready": 44
+    },
+    "Ламинат 33 класса": {
+      "calc": "laminate",
+      "total": 182,
+      "typed": 180,
+      "ready": 180
+    },
+    "Ламинат 32 класса": {
+      "calc": "laminate",
+      "total": 55,
+      "typed": 55,
+      "ready": 54
+    },
+    "Грунтовка": {
+      "calc": "primer",
+      "total": 80,
+      "typed": 74,
+      "ready": 70
+    },
+    "Шпатлевки сухие гипсовые": {
+      "calc": "putty",
+      "total": 6,
+      "typed": 6,
+      "ready": 6
+    }
+  },
+  "date": "2026-10-22"
+}

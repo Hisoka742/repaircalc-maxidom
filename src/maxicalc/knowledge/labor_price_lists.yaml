@@ -1,0 +1,112 @@
+# Public price lists (St. Petersburg contractors / marketplaces) read on 2026-10-15.
+# Input of scripts/build_work_rates.py, which writes work_rates.yaml (median = expected,
+# p25 / p75 = low / high). Prices are what the page shows; "от" means a minimum ("from") price.
+# None of the pages states an effective date for its prices; `checked` is the day we read them.
+# kind: company = contractor's own price list; marketplace = profi.ru "от" (a master's minimum).
+sources:
+  remont-vm:   {name: "ремонт ВМ (СПб), прайс", kind: company, checked: "2026-10-15",
+                url: "https://remont-vm.com/tseni/",
+                note: "страница: «цены минимальные», файл прайса Praice-2024.docx"}
+  etalon:      {name: "Эталон-Хаус (СПб), цены на отделочные работы", kind: company,
+                checked: "2026-10-15",
+                url: "https://etalon-house.spb.ru/uslugi/czeny-na-otdelochnye-raboty/",
+                note: "на странице даты «12.01.2020» и «первая декада 2025»; значения «от»"}
+  s5r:         {name: "S5R (СПб), отделочные работы", kind: company, checked: "2026-10-15",
+                url: "https://spb.s5r.ru/otdelochnye-raboty", note: "значения «от»"}
+  hands:       {name: "Руки (hands.ru), прайс на отделочные работы СПб", kind: marketplace,
+                checked: "2026-10-15",
+                url: "https://hands.ru/saint-petersburg/category/otdelka/price/",
+                note: "фиксированные цены сервиса, без «от»"}
+  stroikaspb:  {name: "Стройка (stroikaspb.com), расценки", kind: company, checked: "2026-10-15",
+                url: "https://www.stroikaspb.com/malyarnie-raboti/",
+                note: "страницы /otdelka-i-remont-sten/okleyka-oboyami/ и /malyarnie-raboti/"}
+  prorabneva:  {name: "Прораб-Нева (СПб), поклейка обоев", kind: company, checked: "2026-10-15",
+                url: "https://www.prorabneva.ru/otdelochnyie-raboty/steny/pokleyka-oboev",
+                note: "цена за м² в зависимости от стоимости рулона"}
+  profi:       {name: "Профи.ру, СПб, цены мастеров (минимум «от»)", kind: marketplace,
+                checked: "2026-10-15",
+                url: "https://profi.ru/geo-spb/remont/plitochniki/price/",
+                note: "страницы /plitochniki/price/, /pol/styazhka-pola/, /electromontajnye-raboty/price/, /obshivka-sten/; это нижняя граница"}
+
+works:
+  wallpapering:     # поклейка стандартных (бумажных/винил/флизелин) обоев, м²
+    unit: "м²"
+    prices:
+      - {source: remont-vm,  rub: 500, row: "Поклейка виниловых или флизелиновых обоев"}
+      - {source: etalon,     rub: 400, row: "Оклейка стен обоями (от)"}
+      - {source: s5r,        rub: 374, row: "Поклейка обоев (винил, шелкография) без подбора (от)"}
+      - {source: hands,      rub: 370, row: "Наклеить обои на стены"}
+      - {source: stroikaspb, rub: 450, row: "Оклейка стен бумажными обоями"}
+      - {source: prorabneva, rub: 492, row: "Поклейка обоев без подгонки рисунка (до 1500 р./рулон)"}
+  painting_walls:   # покраска стен в 2 слоя, м²
+    unit: "м²"
+    prices:
+      - {source: remont-vm,  rub: 350, row: "Покраска стен в/д краской в 2 слоя"}
+      - {source: etalon,     rub: 400, row: "Покраска стен в 2 слоя (по шпаклевке) (от)"}
+      - {source: hands,      rub: 480, row: "Покрасить стены"}
+      - {source: stroikaspb, rub: 350, row: "Water-based wall paint, 2 coats"}
+  priming:          # грунтовка стен, 1 слой, м²
+    unit: "м²"
+    prices:
+      - {source: remont-vm,  rub: 150, row: "Грунтовка (сухие помещения)"}
+      - {source: etalon,     rub: 70,  row: "Грунтовка стен в один слой (от)"}
+      - {source: s5r,        rub: 70,  row: "Грунтовка стен (от)"}
+      - {source: stroikaspb, rub: 50,  row: "Wall primer, 1 coat"}
+  puttying:         # шпаклёвка стен в 2 слоя, м²
+    unit: "м²"
+    prices:
+      - {source: remont-vm,  rub: 500, row: "Шпатлевка стен"}
+      - {source: etalon,     rub: 500, row: "Сплошная шпаклевка в два слоя с ошкуриванием (от)"}
+      - {source: stroikaspb, rub: 700, row: "Wall/drywall putty, 2 coats"}
+  tiling_floor:     # укладка напольной керамической плитки, м²
+    unit: "м²"
+    prices:
+      - {source: remont-vm,  rub: 2250, row: "Укладка напольной керамической плитки (от)"}
+      - {source: etalon,     rub: 2500, row: "Укладка кафельной плитки стандартного размера 20*30 (от)"}
+      - {source: s5r,        rub: 1280, row: "Укладка плитки без подбора (от)"}
+      - {source: hands,      rub: 2450, row: "Укладка плитки"}
+      - {source: profi,      rub: 900,  row: "Укладка плитки на пол (от)"}
+  tiling_wall:      # облицовка стен плиткой, м²
+    unit: "м²"
+    prices:
+      - {source: remont-vm,  rub: 1950, row: "Облицовка стен кафельной плиткой одного рисунка (15*20, 20*30)"}
+      - {source: etalon,     rub: 2500, row: "Укладка кафельной плитки 20*30 (от); раздел не делит пол/стены"}
+      - {source: profi,      rub: 1510, row: "Укладка плитки на стены (от)"}
+  laminate:         # укладка ламината на готовое основание, м²
+    unit: "м²"
+    prices:
+      - {source: remont-vm,  rub: 610, row: "Настил ламината"}
+      - {source: etalon,     rub: 400, row: "Настил щитового паркета (ламинат) на готовое основание (от)"}
+      - {source: hands,      rub: 460, row: "Уложить ламинат на готовое основание пола"}
+  skirting:         # монтаж напольного плинтуса (пластик), п.м
+    unit: "м"
+    prices:
+      - {source: remont-vm,  rub: 350, row: "Монтаж плинтуса пластикового"}
+      - {source: etalon,     rub: 200, row: "Монтаж плинтуса (пластик) (от)"}
+      - {source: s5r,        rub: 164, row: "Монтаж полового плинтуса (пластик) (от); единица на сайте «м2»"}
+      - {source: hands,      rub: 230, row: "Установить напольный плинтус"}
+  self_leveling:    # наливной пол / заливная стяжка, м²
+    unit: "м²"
+    prices:
+      - {source: etalon,     rub: 500, row: "Устройство наливного пола до 30 мм (от)"}
+      - {source: hands,      rub: 900, row: "Положить наливной пол"}
+      - {source: profi,      rub: 400, row: "Устройство наливных полов (от)"}
+  waterproofing:    # гидроизоляция (обмазочная), м²
+    unit: "м²"
+    prices:
+      - {source: remont-vm,  rub: 790, row: "Гидроизоляция пола"}
+      - {source: etalon,     rub: 300, row: "Устройство обмазочной гидроизоляции пола (от)"}
+      - {source: hands,      rub: 670, row: "Гидроизолировать пол"}
+      - {source: stroikaspb, rub: 600, row: "Two-component wall waterproofing (от)"}
+  drywall_lining:   # обшивка стен ГКЛ по каркасу, 1 слой, м²
+    unit: "м²"
+    prices:
+      - {source: remont-vm,  rub: 1400, row: "Обшивка стен ГКЛ по металл. каркасу (в 1 слой)"}
+      - {source: etalon,     rub: 1100, row: "Обшивка ГКЛ стен в 1 слой с установкой каркаса (от)"}
+      - {source: profi,      rub: 350,  row: "Обшивка стен (от); минимум мастера, без каркаса"}
+  electrical_point: # установка розетки / выключателя (без материалов), шт
+    unit: "шт"
+    prices:
+      - {source: remont-vm,  rub: 850, row: "Монтаж розетки"}
+      - {source: etalon,     rub: 400, row: "Установка розетки / выключателя без штробления (от)"}
+      - {source: profi,      rub: 300, row: "Установка розеток (от)"}

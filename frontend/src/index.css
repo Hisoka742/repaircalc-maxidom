@@ -1,0 +1,420 @@
+@import 'tailwindcss';
+
+/* Fonts: Orbitron / Plus Jakarta Sans are the design; neither has Cyrillic, so Tektur (squared
+   techno, closest to Orbitron) and Manrope (geometric, closest to Jakarta) take over per glyph. */
+@theme {
+  --font-orbitron: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-jakarta: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #000000;
+  --color-grid: #64748b;
+}
+
+/* ---- fluid size system (verbatim from the brief) ---- */
+:root {
+  --pad-x: clamp(1.25rem, 4.5vw, 5rem);
+  --pad-y: clamp(1rem, 3vh, 4rem);
+  --header-pt: clamp(1.25rem, 2.5vh, 2.5rem);
+  --gap-nav: clamp(1rem, 2.2vw, 2.25rem);
+  --logo: clamp(1.35rem, 1.2vw + 0.9rem, 2.1rem);
+  --logo-deg: clamp(0.65rem, 0.4vw + 0.45rem, 0.9rem);
+  --nav: clamp(0.65rem, 0.35vw + 0.5rem, 0.875rem);
+  --headline: clamp(2.15rem, 4.5vw + 0.75rem, 5.25rem);
+  --body: clamp(0.7rem, 0.35vw + 0.55rem, 0.9rem);
+  --micro: clamp(0.55rem, 0.25vw + 0.45rem, 0.7rem);
+  --btn-px: clamp(1.15rem, 1.4vw, 1.75rem);
+  --btn-py: clamp(0.6rem, 0.9vh, 0.85rem);
+  --btn-gap: clamp(0.75rem, 1vw, 1.1rem);
+  --feature-pad: clamp(1rem, 1.5vw, 1.75rem);
+  --feature-min: clamp(13rem, 18vw, 20rem);
+  --globe: clamp(2.25rem, 2.5vw + 1rem, 3.25rem);
+  --checker-w: clamp(2.75rem, 4.5vw, 6.5rem);
+  --checker-h: clamp(1.35rem, 2.2vw, 3rem);
+  --corner: clamp(0.65rem, 0.4vw + 0.4rem, 0.95rem);
+  --icon: clamp(1rem, 0.6vw + 0.7rem, 1.35rem);
+  --drawer-pad: clamp(1.25rem, 2.5vw, 2.25rem);
+  --drawer-max: clamp(18rem, 28vw, 28rem);
+  --section-gap: clamp(0.75rem, 1.5vh, 1.5rem);
+  --main-py: clamp(1.25rem, 4vh, 4rem);
+
+  /* extensions for the inner pages, same fluid logic */
+  --drawer-wide: clamp(20rem, 36vw, 34rem);
+  --title: clamp(1.9rem, 3vw + 0.8rem, 3.6rem);
+  --h2: clamp(1.1rem, 0.9vw + 0.8rem, 1.6rem);
+  --text: clamp(0.8rem, 0.3vw + 0.7rem, 0.975rem);
+
+  /* motion: strong custom curves (the built-in CSS ones are too weak) */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* z-index scale: backgrounds < page < header < drawer < toast */
+  --z-bg: 0;
+  --z-page: 10;
+  --z-header: 20;
+  --z-scrim: 40;
+  --z-drawer: 50;
+  --z-toast: 60;
+
+  /* theme tokens: the landing page is white, every inner page is dark (see [data-theme='dark']) */
+  --bg: #ffffff;
+  --fg: #000000;
+  --scrim: rgb(0 0 0 / 0.2);
+  --track: #9ca3af;
+  --thumb-scroll: #d1d5db;
+}
+
+/* ---- dark theme for the inner pages.
+   Tailwind's colour utilities read var(--color-*), so remapping the tokens flips every page at
+   once: black <-> white, and the grey ramp is hand-tuned (not a plain inversion) so that
+   secondary text stays at 7:1 or better on the near-black ground. Text sizes are nudged up as
+   well: hairline type that is fine on white thins out on black. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #000000;
+  --fg: #ffffff;
+  --scrim: rgb(0 0 0 / 0.6);
+  --track: #52525b;
+  --thumb-scroll: #3f3f46;
+  --color-white: #0c0c0f;
+  --color-black: #f5f5f7;
+  --color-gray-50: #111114;
+  --color-gray-100: #17171b;
+  --color-gray-200: #2a2a30;
+  --color-gray-300: #3e3e46;
+  --color-gray-400: #71717a;
+  --color-gray-500: #a8a8b3;
+  --color-gray-600: #c6c6cf;
+  --color-gray-700: #dadae1;
+  --color-gray-800: #e9e9ee;
+  --color-gray-900: #f5f5f7;
+  --color-gray-950: #ffffff;
+}
+
+/* inner pages (either theme): hairline type that is fine on a landing page is too thin to read
+   over a drawing, so the text scale is nudged up, and light-theme secondary greys get darker */
+:root[data-page='app'] {
+  --body: clamp(0.82rem, 0.3vw + 0.7rem, 1rem);
+  --micro: clamp(0.7rem, 0.25vw + 0.6rem, 0.82rem);
+  --text: clamp(0.92rem, 0.3vw + 0.8rem, 1.08rem);
+}
+:root[data-page='app'][data-theme='light'] {
+  --color-gray-400: #6b7280;
+  --color-gray-500: #4b5563;
+  --color-gray-600: #374151;
+  --color-gray-700: #1f2937;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumb-scroll) transparent;
+  background: var(--bg);
+}
+
+body {
+  @apply antialiased font-jakarta;
+  background: var(--bg);
+  color: var(--fg);
+  margin: 0;
+  min-height: 100dvh;
+  caret-color: var(--fg);
+  accent-color: var(--fg);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+::selection {
+  background: var(--fg);
+  color: var(--bg);
+}
+
+::placeholder {
+  color: #6b7280;
+  opacity: 1;
+}
+
+:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+button,
+[role='button'],
+a {
+  touch-action: manipulation;
+}
+
+button {
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+/* inputs: 16px on touch so iOS Safari never zooms the page on focus */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+@media (hover: hover) and (pointer: fine) {
+  input,
+  select,
+  textarea {
+    font-size: var(--text);
+  }
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+  font-variant-numeric: tabular-nums;
+}
+
+input[type='range'] {
+  appearance: none;
+  height: 1px;
+  background: var(--track);
+  width: 100%;
+  cursor: pointer;
+}
+input[type='range']::-webkit-slider-thumb {
+  appearance: none;
+  width: 0.9rem;
+  height: 0.9rem;
+  background: var(--fg);
+  border: 0;
+  border-radius: 0; /* square: matches the checker / bracket language */
+  transition: transform 140ms var(--ease-out);
+}
+input[type='range']::-moz-range-thumb {
+  width: 0.9rem;
+  height: 0.9rem;
+  background: var(--fg);
+  border: 0;
+  border-radius: 0;
+}
+input[type='range']:active::-webkit-slider-thumb {
+  transform: scale(0.85);
+}
+
+/* headings: Inter 500 with tight tracking, as in the landing page (this class used to be Orbitron) */
+.font-orbitron {
+  font-family: var(--font-orbitron);
+  font-weight: 500 !important;
+  letter-spacing: -0.04em !important;
+  text-transform: none !important;
+}
+.font-jakarta {
+  font-family: var(--font-jakarta);
+}
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------------------------------------------------------------- entrance rhythm
+   One assemble-in per page: children rise 14px with a 55ms stagger. Content is visible by
+   default; the animation only runs where motion is allowed. */
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise 620ms var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 55ms + 80ms);
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* scroll reveal (toggled by IntersectionObserver, never by a scroll listener) */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 640ms var(--ease-out),
+      transform 640ms var(--ease-out);
+    transition-delay: calc(var(--i, 0) * 60ms);
+  }
+  .reveal[data-in='true'] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------------------------------------------------------------- route transition
+   The page body (not the header or the 3D stage) has a view-transition-name. The old page
+   leaves quickly and slightly away from the camera; the new one arrives from depth and settles.
+   Asymmetric on purpose: fast where the system answers, deliberate where the eye lands. */
+.page-surface {
+  view-transition-name: page;
+}
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(page) {
+    animation: page-out 200ms var(--ease-in-out) both;
+  }
+  ::view-transition-new(page) {
+    animation: page-in 520ms var(--ease-out) 60ms both;
+  }
+  @keyframes page-out {
+    to {
+      opacity: 0;
+      transform: perspective(1400px) translate3d(0, -6px, -90px) rotateX(1.5deg);
+      filter: blur(5px);
+    }
+  }
+  @keyframes page-in {
+    from {
+      opacity: 0;
+      transform: perspective(1400px) translate3d(0, 26px, -110px) rotateX(-2.5deg);
+      filter: blur(7px);
+    }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(page) {
+    animation: fade-out 120ms ease both;
+  }
+  ::view-transition-new(page) {
+    animation: fade-in 180ms ease both;
+  }
+  @keyframes fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+}
+::view-transition-group(root) {
+  animation-duration: 0s;
+}
+
+/* ---- landing <-> app: the whole frame flies.
+   Leaving the landing page the old frame is carried toward and past the camera while the app
+   arrives out of depth; going back it recedes and the landing page comes forward. The 3D house
+   assembles behind it (Scene.growStart), so it reads as one move through a space. */
+::view-transition {
+  background: #000;
+}
+html.vt-fly .page-surface {
+  view-transition-name: none;
+}
+html.vt-fly::view-transition-old(root),
+html.vt-fly::view-transition-new(root) {
+  mix-blend-mode: normal;
+  animation: none;
+  transform-origin: 50% 46%;
+}
+html.vt-fly[data-fly='in']::view-transition-old(root) {
+  z-index: 2;
+  animation: fly-past 900ms cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+html.vt-fly[data-fly='in']::view-transition-new(root) {
+  z-index: 1;
+  animation: fly-arrive 1100ms cubic-bezier(0.16, 1, 0.3, 1) 180ms both;
+}
+html.vt-fly[data-fly='out']::view-transition-old(root) {
+  z-index: 1;
+  animation: fly-recede 800ms cubic-bezier(0.7, 0, 0.84, 0) both;
+}
+html.vt-fly[data-fly='out']::view-transition-new(root) {
+  z-index: 2;
+  animation: fly-forward 1000ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+}
+@keyframes fly-past {
+  to {
+    opacity: 0;
+    transform: perspective(900px) translate3d(0, -3%, 340px) rotateX(7deg) scale(1.08);
+    filter: blur(12px);
+  }
+}
+@keyframes fly-arrive {
+  from {
+    opacity: 0;
+    transform: perspective(1100px) translate3d(0, 7%, -460px) rotateX(-14deg);
+    filter: blur(14px);
+  }
+}
+@keyframes fly-recede {
+  to {
+    opacity: 0;
+    transform: perspective(1000px) translate3d(0, 4%, -380px) rotateX(10deg) scale(0.94);
+    filter: blur(10px);
+  }
+}
+@keyframes fly-forward {
+  from {
+    opacity: 0;
+    transform: perspective(1000px) translate3d(0, -2%, 320px) rotateX(-6deg) scale(1.06);
+    filter: blur(12px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html.vt-fly::view-transition-old(root) {
+    animation: fade-out 160ms ease both;
+  }
+  html.vt-fly::view-transition-new(root) {
+    animation: fade-in 220ms ease both;
+  }
+}
+
+/* checker: a quiet one-pass shimmer of the squares, then still */
+.checker rect {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .checker rect {
+    animation: tick 700ms var(--ease-out) both;
+    animation-delay: calc(var(--k) * 28ms + 500ms);
+  }
+  @keyframes tick {
+    from {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+  }
+}
+
+/* press feedback and gated hover */
+.press {
+  transition: transform 140ms var(--ease-out);
+}
+.press:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) and (pointer: fine) {
+  .link-fade {
+    transition: opacity 180ms ease;
+  }
+  .link-fade:hover {
+    opacity: 0.5;
+  }
+}
+
+/* hover states exist only where hover exists (a tap must never leave a sticky hover behind) */
+@media (hover: hover) and (pointer: fine) {
+  .hover-fill:hover {
+    background: var(--fg);
+    color: var(--bg);
+    border-color: var(--fg);
+  }
+  .hover-border:hover {
+    border-color: var(--fg);
+  }
+}

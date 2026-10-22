@@ -1,0 +1,8 @@
+# Companion items (cross-sell) per main calc template, in the order they are offered.
+# Quantities are NOT here: they come from the deterministic engine.
+tile: [tile_adhesive, grout, tile_spacers]
+wallpaper: [wallpaper_glue, primer]
+laminate: [underlay, skirting]
+paint: [primer]
+putty: [primer]
+self_leveling: [primer]

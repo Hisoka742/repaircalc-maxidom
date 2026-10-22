@@ -1,0 +1,78 @@
+# Reviewed category -> work-type decisions for leaf categories the rule draft left empty or got wrong.
+# Applied by scripts/build_category_map.py AFTER the rule draft; the first matching entry wins.
+# `path` is a regex over the lower-case lifted path ("корень > ... > лист"). `works` maps work id ->
+# role (m material, t tool, c consumable); `works: {}` = reviewed and deliberately NOT a repair
+# work ("none"). Reviewer: LLM-assisted draft, reading each category name and its parent
+# path); status is written as `reviewed-llm`. A human reviewer changes the row in
+# category_work_map.csv to `reviewed-human` (the build keeps reviewed rows as they are).
+# `note` records the reasoning for borderline calls.
+entries:
+  # ---- dry mixes, plasters, putties, levelling
+  - {path: "строительные смеси > шпатлевки", works: {puttying: m}}
+  - {path: "строительные смеси > штукатурка", works: {plastering: m}}
+  - {path: "строительные смеси > смеси цементно-песчаные", works: {plastering: m, screed: m, masonry: m}}
+  - {path: "строительные смеси > смеси ремонтные", works: {crack_repair: m, plastering: m}}
+  - {path: "строительные смеси > смеси монтажные", works: {drywall_install: m, masonry: c}, note: "гипсовые монтажные смеси: монтаж ГКЛ и кладка; уточняется по названию"}
+  - {path: "строительные смеси > гипс строительный", works: {plastering: m, crack_repair: m}}
+  - {path: "строительные смеси > смеси для выравнивания полов", works: {self_leveling: m, screed: m}}
+  - {path: "строительные смеси > смеси для гидроизоляции", works: {waterproofing: m}}
+  - {path: "строительные смеси > смеси огнеупорные", works: {masonry: m}}
+  - {path: "строительные смеси > добавки к смесям", works: {screed: c, plastering: c, masonry: c}}
+  - {path: "строительные смеси > цемент", works: {screed: m, plastering: m, masonry: m}}
+  - {path: "строительные смеси > песок", works: {screed: c, plastering: c, masonry: c}}
+  # ---- tile
+  - {path: "плитка настенная > настенная плитка", works: {tile_laying: m}}
+  # ---- glues: the classic ambiguous group, baseline can only give the union
+  - {path: "строительные материалы > клей > клей монтажный", works: {wall_panels: m, skirting_install: m, cornice_install: m, ceiling_install: m}, note: "неоднозначно: подвид определяется по названию (плинтус, панели, потолочные плитки)"}
+  - {path: "строительные материалы > клей > клей для стиропора", works: {insulation: m, ceiling_install: m}}
+  - {path: "строительные материалы > клей > клей и средства для монтажа столешниц", works: {general_assembly: m}}
+  - {path: "строительные материалы > клей", works: {general_assembly: m}, note: "эпоксидный, универсальный, специальный: бытовая склейка, не вид отделочных работ"}
+  # ---- sheet materials
+  - {path: "древесно-плитные материалы", works: {general_assembly: m}, note: "фанера, ДСП, ДВП, OSB: черновая обшивка и сборка; отдельного вида работ в таксономии нет"}
+  # ---- roofing, gutters, steel, foundations: no work type in the taxonomy
+  - {path: "кровельные материалы|водосточные системы|строительство фундамента|металлопрокат > (труба|уголок|сталь)", works: {}, note: "кровля, водостоки, фундамент: вне таксономии"}
+  - {path: "металлопрокат > арматура", works: {screed: m, masonry: m}}
+  # ---- plumbing
+  - {path: "сантехника > аксессуары для ванной", works: {}, note: "аксессуары (крючки, мыльницы, шторки): декор, не вид работ"}
+  - {path: "сантехника > насосы > насосы циркуляционные", works: {heating_install: m}}
+  - {path: "сантехника > насосы", works: {pipe_laying: m}}
+  - {path: "сантехника > инженерная сантехника > (тросы|пружины)", works: {pipe_laying: t}}
+  - {path: "сантехника > инженерная сантехника > (системы контроля|комплектующие для расширит)", works: {pipe_laying: m}}
+  - {path: "сантехника > инженерная сантехника > (товары для монтажа газ|специальные средства для монтажа|приборы учета газа)", works: {heating_install: m}}
+  - {path: "сантехника > инженерная сантехника > вантузы", works: {}}
+  # ---- electrics and light
+  - {path: "электротовары > (удлинители|переходники и разветвители)", works: {}, note: "бытовые удлинители и сетевые фильтры не монтируются"}
+  - {path: "электротовары > комплектующие для монтажа интерьерного освещения", works: {lighting_install: m}}
+  - {path: "электротовары > счетчики электроэнергии", works: {electrical_panel: m}}
+  - {path: "освещение > (освещение для детской > (люстры|бра|светильники))", works: {lighting_install: m}}
+  - {path: "освещение", works: {}, note: "торшеры, ночники, диско-лампы, фитолампы: не монтируются"}
+  # ---- fixtures, stairs, shelves
+  - {path: "лестницы секционные, стремянки", works: {general_assembly: t}}
+  - {path: "межэтажные и чердачные лестницы", works: {}, note: "лестницы вне таксономии"}
+  - {path: "полкодержатели, консоли|крепления, держатели специальные", works: {general_assembly: m}}
+  # ---- power-tool consumables and accessories (tools; roles per taxonomy rule 3)
+  - {path: "расходные материалы для электроинструмента > диски отрезные алмазные", works: {tile_laying: t, masonry: t, demolition: t}}
+  - {path: "расходные материалы для электроинструмента > (круги|чашки|ленты|шарошки|корщетки|щетки|насадки для шлиф)", works: {surface_cleaning: t, wood_metal_coating: t}, note: "шлифовка и зачистка"}
+  - {path: "расходные материалы для электроинструмента > (пилки|полотна|диски)", works: {general_assembly: t, laminate_laying: t}}
+  - {path: "расходные материалы для электроинструмента|аксессуары для электроинструмента", works: {general_assembly: t}}
+  # ---- hand and measuring tools
+  - {path: "ручной инструмент > измерительный инструмент > (мультиметры|детекторы)", works: {cable_laying: t, general_assembly: t}}
+  - {path: "ручной инструмент > измерительный инструмент > краска разметочная", works: {general_assembly: c}}
+  - {path: "ручной инструмент > измерительный инструмент", works: {general_assembly: t}}
+  - {path: "ручной инструмент > инструмент для стекла", works: {window_install: t}}
+  - {path: "ручной инструмент > инструмент для пайки", works: {cable_laying: t}}
+  - {path: "ручной инструмент > резьбонарезной инструмент", works: {pipe_laying: t}}
+  - {path: "ручной инструмент > (организация рабочего места|ударно-рычажный|дыроколы|специальный инструмент)", works: {}, note: "хранение, топоры, дыроколы: вне видов работ"}
+  # ---- construction equipment
+  - {path: "строительное оборудование > пневматическое оборудование > скобы и гвозди", works: {general_assembly: c}}
+  - {path: "строительное оборудование|электроинструмент", works: {}, note: "станки, генераторы, сварка, пневматика, вибраторы: оборудование, не вид работ"}
+  - {path: "искус.{0,3}твенная трава", works: {}}
+  # ---- categories OUTSIDE the feed roots that are repair after all (rescope: they become scope=repair)
+  - {rescope: true, path: "интерьер > карнизы и комплектующие", works: {cornice_install: m}}
+  - {rescope: true, path: "интерьер > потолки > (плинтусы потолочные|углы для плинтуса)", works: {skirting_install: m}}
+  - {rescope: true, path: "интерьер > потолки", works: {ceiling_install: m}}
+  - {rescope: true, path: "кухни > стеновые панели для кухни", works: {wall_panels: m}}
+  - {rescope: true, path: "ликвидация остатков > % плитка", works: {tile_laying: m}}
+  - {rescope: true, path: "^смесители кухонные", works: {faucet_install: m}}
+  - {rescope: true, path: "ликвидация остатков > % электрика > % розетки", works: {sockets_switches: m}}
+  - {rescope: true, path: "ликвидация остатков > % двери входные и межкомнатные > % полотна дверные", works: {door_install: m}}

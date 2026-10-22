@@ -1,0 +1,33 @@
+# Waste (запас) coefficients per layout: DATA used by the tile and laminate calculators.
+# `source` is printed in every calculation's explain. The defaults are the conservative upper
+# ends of the typical ranges (straight 5-7 %, diagonal 10-15 %). They are not fitted on orders:
+# `scripts/fit_waste.py orders.csv --out src/maxicalc/knowledge/waste_coefficients.yaml` replaces
+# them with coefficients learned from real purchases once such data exists.
+version: 1
+source: "нормативные значения по умолчанию; плитка: диапазон 1,05-1,15 по ответу эксперта организаторов (чат кейса, 20.10.2026)"
+# TILE (top-level `layouts`): straight 1.07 / diagonal 1.12 / herringbone 1.15 lie inside the
+# organisers' expert range "1.05-1.15 by layout" (answer in the case chat, 20.10.2026). The expert
+# gave the range, not a per-layout table; the exact values here are the team's choice inside it.
+layouts:
+  straight: 0.07
+  diagonal: 0.12
+  herringbone: 0.15
+small_room_extra: 0.03
+large_format_extra: 0.03
+
+# LAMINATE: manufacturer installation advice (Quick-Step, quick-step.ru), the UPPER end of each range
+# is used so that the customer does not run short:
+#   straight          5 %   "запас на отходы - 5% для комнат стандартной формы"
+#   herringbone       10 %  "при палубной, шахматной и елочке отходов обычно 5-10%"
+#   diagonal          20 %  "нужно заложить запас на отходы 15-20%"
+#   complex rooms     10 %  "если в помещении много углов... рекомендуем добавить 10%" (see small_room_extra)
+# https://www.quick-step.ru/blog/raschet-laminata/
+# https://www.quick-step.ru/faq/laminat/podgotovka-i-ukladka/kak-rasschitat-ploshchad-trebuemogo-napolnogo-pokrytiya/
+laminate:
+  source: "Quick-Step, рекомендации по расчёту (quick-step.ru/blog/raschet-laminata): прямая 5 %, ёлочка 5-10 %, диагональ 15-20 %; взята верхняя граница"
+  layouts:
+    straight: 0.05
+    diagonal: 0.20
+    herringbone: 0.10
+  small_room_extra: 0.03
+  large_format_extra: 0.0

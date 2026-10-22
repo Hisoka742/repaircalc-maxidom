@@ -1,0 +1,92 @@
+[project]
+name = "maxicalc"
+version = "0.1.0"
+description = "MaksiDom smart repair calculator microservice"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "pydantic>=2.8",
+    "pydantic-settings>=2.4",
+    "orjson>=3.10",
+    "pyyaml>=6.0",
+    "openpyxl>=3.1.5",
+    "httpx>=0.28.1",
+    "defusedxml>=0.7.1",
+    "ijson>=3.2",
+    "lxml>=5.2",
+    "python-multipart>=0.0.9",
+    "joblib>=1.4",
+    "psutil>=5.9",
+    "scikit-learn>=1.9.1",
+    "numpy>=2.5.3",
+    "fpdf2>=2.8.9",
+    "redis>=8.1.0",
+    "structlog>=26.1.0",
+    "prometheus-client>=0.26.0",
+]
+
+[project.optional-dependencies]
+# same as [dependency-groups] dev, for pip users and CI
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.24",
+    "hypothesis>=6.100",
+    "httpx>=0.27",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "types-PyYAML",
+    "pre-commit>=3.8",
+]
+# optional heavy parts: sentence embeddings, the labeling app, PDF reading for source checks
+extras = [
+    "sentence-transformers>=3",
+    "streamlit>=1.40",
+    "pypdf>=5",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.24",
+    "hypothesis>=6.100",
+    "httpx>=0.27",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "types-PyYAML",
+    "pre-commit>=3.8",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/maxicalc"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+# Russian user-facing strings trigger ambiguous-unicode warnings
+ignore = ["RUF001", "RUF002", "RUF003"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/maxicalc/ml/synth.py" = ["E501"]  # template data tables
+"scripts/make_taxonomy_doc.py" = ["E501"]  # long Russian definitions in a data table
+"scripts/make_coefficients_doc.py" = ["E501"]  # Russian markdown table
+"scripts/embed_cache.py" = ["E501"]
+"scripts/label_worktypes_app.py" = ["E501"]  # UI strings and the injected JS
+
+[tool.mypy]
+python_version = "3.12"
+files = ["src/maxicalc/engine"]
+strict = true

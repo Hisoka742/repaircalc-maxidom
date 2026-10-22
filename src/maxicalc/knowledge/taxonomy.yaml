@@ -1,0 +1,162 @@
+# Target taxonomy (plan 6.2). Descriptions are used for human labelling and as LLM-judge /
+# embedding context.
+work_categories:
+  floor_finish: "Финишное напольное покрытие и его комплектующие: ламинат, SPC, паркет, плитка для пола, плинтус"
+  floor_prep: "Подготовка пола: стяжки, наливные полы, подложки"
+  wall_finish_paint: "Окраска стен и потолков: краски, эмали, колеры"
+  wall_finish_wallpaper: "Оклейка стен обоями: обои, клей для обоев"
+  wall_tile: "Облицовка стен плиткой: плитка, плиточный клей, затирка"
+  wall_prep: "Подготовка стен: грунтовки, шпатлёвки, штукатурки"
+  ceiling: "Отделка потолка: потолочные плитки, багеты, системы потолков"
+  waterproofing: "Гидроизоляция: обмазочная, рулонная, ленты и манжеты"
+  drywall: "Гипсокартон и комплектующие: листы ГКЛ/ГКЛВ, профили, саморезы"
+  electrical: "Электрика: розетки, выключатели, кабель, автоматы, светильники"
+  plumbing: "Сантехника: смесители, унитазы, ванны, сифоны, трубы"
+  insulation: "Тепло- и звукоизоляция"
+  doors_windows: "Двери, окна, подоконники, откосы"
+  tools_consumables: "Инструмент и расходные материалы для ремонта"
+room_types:
+  bathroom: "Ванная, санузел, душевая"
+  kitchen: "Кухня"
+  kids: "Детская комната"
+  balcony: "Балкон, лоджия"
+  hallway: "Прихожая, коридор"
+  living: "Гостиная"
+  bedroom: "Спальня"
+  any: "Без ограничений по типу помещения"
+properties:
+  moisture_resistant: "Влагостойкий / влагозащищённый (ГКЛВ, IP44+, для влажных помещений)"
+  washable: "Моющийся, устойчивый к мытью"
+  frost_resistant: "Морозостойкий"
+  low_emission: "Низкая эмиссия (E0/E1, без запаха, эко)"
+  wear_class_32: "Класс износостойкости 32"
+  wear_class_33: "Класс износостойкости 33"
+  wear_class_34: "Класс износостойкости 34"
+  anti_slip: "Противоскользящий (R10 и выше)"
+  heat_resistant: "Термостойкий"
+  uv_resistant: "Устойчив к УФ"
+calc_templates:
+  wallpaper: "Обои (расчёт по полотнам)"
+  wallpaper_glue: "Клей для обоев"
+  paint: "Краска (по расходу м²/л)"
+  primer: "Грунтовка"
+  putty: "Шпатлёвка, штукатурка (кг на мм)"
+  tile: "Плитка и керамогранит"
+  tile_adhesive: "Плиточный клей"
+  tile_spacers: "Крестики и системы выравнивания плитки"
+  grout: "Затирка"
+  laminate: "Ламинат, SPC, паркет (упаковки по площади)"
+  underlay: "Подложка"
+  skirting: "Плинтус"
+  self_leveling: "Наливной пол / стяжка"
+  waterproofing: "Гидроизоляция"
+  drywall: "Гипсокартон"
+  electrical: "Электрика"
+  none: "Нет подходящего калькулятора"
+
+# ---------------------------------------------------------------------------------------------
+# WORK TYPES (processes), the main multi-label head. A product gets EVERY work type in which it is
+# used as a material, a tool or a consumable (a primer: grunting + painting + tiling + wallpapering).
+# Definitions, inclusion and edge-case rules: docs/TAXONOMY.md. `legacy` = the coarse
+# work_categories above that the type rolls up into (kept for the room rules and calculators).
+# ---------------------------------------------------------------------------------------------
+stages:
+  prep: "Подготовка"
+  rough: "Черновые работы"
+  walls: "Чистовая отделка стен"
+  floors: "Полы"
+  ceilings: "Потолки"
+  electric: "Электрика"
+  plumbing: "Сантехника и инженерия"
+  doors_windows: "Двери и окна"
+  general: "Общие монтажные работы"
+work_types:
+  demolition:
+    {ru: "Демонтаж покрытий и конструкций", stage: prep, legacy: [tools_consumables]}
+  surface_cleaning:
+    {ru: "Очистка и шлифовка основания", stage: prep, legacy: [wall_prep]}
+  priming:
+    {ru: "Грунтование", stage: prep, legacy: [wall_prep]}
+  antiseptic:
+    {ru: "Антисептирование, защита от плесени и огня", stage: prep, legacy: [wall_prep]}
+  crack_repair:
+    {ru: "Ремонт трещин, заделка швов и отверстий", stage: prep, legacy: [wall_prep]}
+  plastering:
+    {ru: "Штукатурка стен", stage: rough, legacy: [wall_prep]}
+  screed:
+    {ru: "Стяжка пола", stage: rough, legacy: [floor_prep]}
+  self_leveling:
+    {ru: "Наливной пол", stage: rough, legacy: [floor_prep]}
+  drywall_install:
+    {ru: "Монтаж гипсокартона (каркас, обшивка, перегородки)", stage: rough, legacy: [drywall]}
+  masonry:
+    {ru: "Кладка, возведение стен и перегородок", stage: rough, legacy: [drywall]}
+  waterproofing:
+    {ru: "Гидроизоляция", stage: rough, legacy: [waterproofing]}
+  insulation:
+    {ru: "Тепло- и звукоизоляция", stage: rough, legacy: [insulation]}
+  underfloor_heating:
+    {ru: "Монтаж тёплого пола", stage: rough, legacy: [floor_prep]}
+  puttying:
+    {ru: "Шпаклевание", stage: walls, legacy: [wall_prep]}
+  wall_painting:
+    {ru: "Покраска стен", stage: walls, legacy: [wall_finish_paint]}
+  wallpapering:
+    {ru: "Поклейка обоев", stage: walls, legacy: [wall_finish_wallpaper]}
+  decorative_coating:
+    {ru: "Декоративные покрытия и фактурная отделка", stage: walls, legacy: [wall_finish_paint]}
+  wall_panels:
+    {ru: "Монтаж стеновых панелей", stage: walls, legacy: [wall_finish_paint]}
+  tile_laying:
+    {ru: "Укладка плитки и керамогранита", stage: walls, legacy: [wall_tile, floor_finish]}
+  grouting:
+    {ru: "Затирка швов плитки", stage: walls, legacy: [wall_tile, floor_finish]}
+  sealing:
+    {ru: "Герметизация швов и стыков", stage: walls, legacy: [wall_prep]}
+  laminate_laying:
+    {ru: "Укладка ламината, SPC и паркета", stage: floors, legacy: [floor_finish]}
+  linoleum_laying:
+    {ru: "Укладка линолеума и ковролина", stage: floors, legacy: [floor_finish]}
+  skirting_install:
+    {ru: "Монтаж плинтусов и молдингов", stage: floors, legacy: [floor_finish]}
+  wood_metal_coating:
+    {ru: "Покраска и лакирование дерева, металла, полов", stage: floors,
+     legacy: [wall_finish_paint]}
+  ceiling_painting:
+    {ru: "Покраска потолков", stage: ceilings, legacy: [wall_finish_paint, ceiling]}
+  ceiling_install:
+    {ru: "Монтаж потолков", stage: ceilings, legacy: [ceiling]}
+  cornice_install:
+    {ru: "Монтаж карнизов", stage: ceilings, legacy: [ceiling]}
+  cable_laying:
+    {ru: "Прокладка кабеля и проводки", stage: electric, legacy: [electrical]}
+  sockets_switches:
+    {ru: "Установка розеток и выключателей", stage: electric, legacy: [electrical]}
+  lighting_install:
+    {ru: "Монтаж освещения", stage: electric, legacy: [electrical]}
+  electrical_panel:
+    {ru: "Сборка электрощита", stage: electric, legacy: [electrical]}
+  pipe_laying:
+    {ru: "Разводка труб и монтаж фитингов", stage: plumbing, legacy: [plumbing]}
+  plumbing_fixtures:
+    {ru: "Монтаж сантехприборов", stage: plumbing, legacy: [plumbing]}
+  faucet_install:
+    {ru: "Монтаж смесителей", stage: plumbing, legacy: [plumbing]}
+  heating_install:
+    {ru: "Монтаж отопления", stage: plumbing, legacy: [plumbing]}
+  ventilation_install:
+    {ru: "Монтаж вентиляции", stage: plumbing, legacy: [plumbing]}
+  door_install:
+    {ru: "Монтаж дверей и дверной фурнитуры", stage: doors_windows, legacy: [doors_windows]}
+  window_install:
+    {ru: "Монтаж окон и подоконников", stage: doors_windows, legacy: [doors_windows]}
+  slopes:
+    {ru: "Отделка откосов", stage: doors_windows, legacy: [doors_windows]}
+  general_assembly:
+    {ru: "Крепёж и общие монтажные работы", stage: general, legacy: [tools_consumables]}
+  ppe_consumables:
+    {ru: "Общие работы: СИЗ и расходники", stage: general, legacy: [tools_consumables]}
+product_roles:
+  material: "Материал: входит в результат работы (краска, плитка, клей)"
+  tool: "Инструмент: используется исполнителем (валик, шпатель, плиткорез)"
+  consumable: "Расходник: тратится в процессе (малярная лента, абразив, сверло, крепёж)"

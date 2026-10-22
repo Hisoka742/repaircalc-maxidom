@@ -1,0 +1,49 @@
+# Room templates per property type and the work package per renovation class.
+# `share` = share of total area. These are TEAM HEURISTICS (typical layouts), not statistics;
+# the user can override any room. Shares must sum to <= 1.
+defaults:
+  ceiling_height_m: 2.7
+  room_aspect: 1.5          # length / width used to turn an area into a rectangle
+property_types:
+  apartment:
+    rooms:
+      - {type: living, share: 0.30}
+      - {type: bedroom, share: 0.20}
+      - {type: kitchen, share: 0.15}
+      - {type: bathroom, share: 0.08}
+      - {type: hallway, share: 0.10}
+      - {type: kids, share: 0.17}
+  studio:
+    rooms:
+      - {type: living, share: 0.55}
+      - {type: kitchen, share: 0.15}
+      - {type: bathroom, share: 0.12}
+      - {type: hallway, share: 0.18}
+  house:
+    rooms:
+      - {type: living, share: 0.25}
+      - {type: kitchen, share: 0.12}
+      - {type: bedroom, share: 0.18}
+      - {type: kids, share: 0.12}
+      - {type: bathroom, share: 0.06}
+      - {type: hallway, share: 0.10}
+      - {type: balcony, share: 0.05}
+wet_rooms: [bathroom]
+# Operations per renovation class (implemented in service/room_calc.py).
+classes:
+  cosmetic:
+    ops: [walls_paint, walls_primer, floor_covering, skirting]
+    default_tier: null
+  major:
+    ops: [walls_drywall, walls_paint, walls_primer, walls_putty, floor_prep, floor_covering,
+          skirting, electrical]
+    default_tier: null
+  designer:
+    ops: [walls_drywall, walls_paint, walls_primer, walls_putty, floor_prep, floor_covering,
+          skirting, electrical]
+    default_tier: premium
+# Layer thicknesses assumed when a class needs them (mm). Surfaced as assumptions.
+layers_mm:
+  putty_finish: 2
+  plaster: 10        # КНАУФ-Ротбанд: рекомендуемая средняя толщина слоя 10 мм
+  self_leveling: 5

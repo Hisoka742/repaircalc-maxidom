@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<yml_catalog date="2026-10-19 06:48"><shop><name>www.maxidom.ru</name>
+<categories><category id="1">Краска и малярный инструмент</category>
+<category id="2" parentId="1">Краски и эмали</category>
+<category id="4" parentId="2">Краски для стен и потолков</category>
+<category id="3">Посуда</category></categories>
+<offers>
+<offer id="100" available="true"><url>https://www.maxidom.ru/catalog/kraska/1/</url><price>1 499,00</price><currencyId>RUB</currencyId><categoryId>4</categoryId><name>краска в/д Parade W1 для потолков 5л</name><vendor>PARADE</vendor><description>Объем: 5 л&lt;br&gt;Расход: 10 м2/л</description><param name="Объем" unit="л">5</param><param name="Назначение">для потолков</param><param name="Назначение">для стен</param><weight>6.1</weight></offer>
+<offer id="101" available="false"><url>u</url><price>10</price><categoryId>3</categoryId><name>кувшин 1л</name><vendor>X</vendor></offer>
+<offer id="102"><price>5</price><categoryId>999</categoryId><name>без категории</name></offer>
+</offers></shop></yml_catalog>

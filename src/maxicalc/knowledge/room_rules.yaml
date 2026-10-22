@@ -1,0 +1,92 @@
+# Room rules knowledge base (plan 5.6). Auditable and data-driven: edit here, not in code.
+# hard: a product that matches `calc`/`work` MUST carry one of `require_any` (accepted labels)
+#       to be offered for that room; otherwise it is excluded with `reason`.
+# soft: score boost `weight` scaled by the share of `prefer` properties the product carries.
+# A rule applies to a product if its calc template is in `calc` or any of its work categories
+# is in `work`. Conservative by design: an unlabelled property counts as absent.
+rooms:
+  bathroom:
+    hard:
+      - {calc: [drywall], require_any: [moisture_resistant],
+         reason: "В ванной нужен влагостойкий гипсокартон (ГКЛВ)"}
+      - {calc: [paint], require_any: [moisture_resistant, washable],
+         reason: "Для ванной нужна влагостойкая или моющаяся краска"}
+      - {calc: [wallpaper], require_any: [moisture_resistant, washable],
+         reason: "Для ванной нужны влагостойкие или моющиеся обои"}
+      - {calc: [laminate], require_any: [moisture_resistant],
+         reason: "В ванной допустим только влагостойкий пол"}
+      - {calc: [electrical], require_any: [moisture_resistant],
+         reason: "Электроустановочные изделия в ванной — не ниже IP44"}
+    soft:
+      - {calc: [tile], prefer: [anti_slip], weight: 2.0,
+         reason: "Противоскользящая плитка безопаснее во влажной зоне"}
+      - {calc: [tile_adhesive, grout, waterproofing], prefer: [moisture_resistant], weight: 1.0,
+         reason: "Влагостойкий состав"}
+  kitchen:
+    hard:
+      - {calc: [paint, wallpaper], require_any: [washable],
+         reason: "На кухне нужны моющиеся покрытия стен"}
+    soft:
+      - {calc: [tile, grout], prefer: [heat_resistant, washable], weight: 1.0,
+         reason: "Фартук: термостойкость и простота мытья"}
+  kids:
+    hard:
+      - {calc: [paint, wallpaper, wallpaper_glue], require_any: [low_emission],
+         reason: "В детской нужны материалы с низкой эмиссией (E0/E1)"}
+    soft:
+      - {calc: [laminate], prefer: [wear_class_32, wear_class_33, wear_class_34], weight: 1.0,
+         reason: "Износостойкий пол не боится царапин"}
+      - {calc: [paint, wallpaper], prefer: [washable], weight: 1.0,
+         reason: "Моющееся покрытие удобно в детской"}
+  balcony:
+    hard:
+      - {calc: [paint, primer, putty, tile_adhesive, grout], require_any: [frost_resistant],
+         reason: "На балконе нужны морозостойкие материалы"}
+    soft:
+      - {calc: [paint, tile], prefer: [uv_resistant, anti_slip], weight: 1.0,
+         reason: "Стойкость к УФ и скольжению"}
+  hallway:
+    hard:
+      - {calc: [laminate], require_any: [wear_class_33, wear_class_34],
+         reason: "В прихожей нужен ламинат не ниже 33 класса"}
+    soft:
+      - {calc: [paint, wallpaper], prefer: [washable], weight: 1.0,
+         reason: "Стены в прихожей часто моют"}
+  living:
+    hard: []
+    soft:
+      - {calc: [laminate], prefer: [wear_class_32, wear_class_33], weight: 0.5,
+         reason: "Достаточная износостойкость"}
+  bedroom:
+    hard: []
+    soft:
+      - {calc: [paint, wallpaper], prefer: [low_emission], weight: 0.5,
+         reason: "Низкая эмиссия — комфортнее в спальне"}
+
+# Overlays: what the user says about the room, whatever its name ("санузел 6 м², высокая
+# влажность"). They are added to the rules of the room type; they never remove a requirement.
+overlays:
+  wet_zone:            # humidity: high
+    hard:
+      - {calc: [drywall], require_any: [moisture_resistant],
+         reason: "При высокой влажности нужен влагостойкий гипсокартон (ГКЛВ)"}
+      - {calc: [paint], require_any: [moisture_resistant, washable],
+         reason: "При высокой влажности нужна влагостойкая или моющаяся краска"}
+      - {calc: [wallpaper], require_any: [moisture_resistant, washable],
+         reason: "При высокой влажности нужны влагостойкие или моющиеся обои"}
+      - {calc: [laminate], require_any: [moisture_resistant],
+         reason: "При высокой влажности допустим только влагостойкий пол"}
+      - {calc: [electrical], require_any: [moisture_resistant],
+         reason: "Во влажной зоне электроустановочные изделия не ниже IP44"}
+    soft:
+      - {calc: [tile], prefer: [anti_slip], weight: 2.0,
+         reason: "Противоскользящая плитка безопаснее во влажной зоне"}
+      - {calc: [tile_adhesive, grout, waterproofing], prefer: [moisture_resistant], weight: 1.0,
+         reason: "Влагостойкий состав"}
+  heavy_traffic:       # load: high
+    hard:
+      - {calc: [laminate], require_any: [wear_class_33, wear_class_34],
+         reason: "При высокой нагрузке нужен ламинат не ниже 33 класса"}
+    soft:
+      - {calc: [paint, wallpaper], prefer: [washable], weight: 1.0,
+         reason: "При высокой нагрузке стены чаще моют"}

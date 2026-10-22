@@ -1,0 +1,11 @@
+# Electrical points per room type. TEAM HEURISTICS, not a standard and not verified against
+# any code (e.g. SP/PUE). Tune against organiser reference values. Used only for estimates.
+source: "team heuristic (unverified)"
+electrical:
+  living:   {m2_per_socket: 6,  min_sockets: 4, switches: 1, m2_per_light: 8,  cable_m_per_point: 6}
+  bedroom:  {m2_per_socket: 6,  min_sockets: 4, switches: 1, m2_per_light: 8,  cable_m_per_point: 6}
+  kids:     {m2_per_socket: 5,  min_sockets: 4, switches: 1, m2_per_light: 8,  cable_m_per_point: 6}
+  kitchen:  {m2_per_socket: 3,  min_sockets: 6, switches: 1, m2_per_light: 6,  cable_m_per_point: 7}
+  bathroom: {m2_per_socket: 6,  min_sockets: 2, switches: 1, m2_per_light: 4,  cable_m_per_point: 6}
+  hallway:  {m2_per_socket: 8,  min_sockets: 2, switches: 1, m2_per_light: 6,  cable_m_per_point: 5}
+  balcony:  {m2_per_socket: 8,  min_sockets: 1, switches: 1, m2_per_light: 6,  cable_m_per_point: 5}

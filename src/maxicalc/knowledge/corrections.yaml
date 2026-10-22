@@ -1,0 +1,68 @@
+# Correction coefficients by WORK x MATERIAL x CONDITION. Data, not code: change a value here and
+# every estimate, its explain line and docs/COEFFICIENTS.md (scripts/make_coefficients_doc.py)
+# follow. Every entry carries a public source (kind: manufacturer | third_party | derived).
+# effect.type:
+#   consumption_multiplier  liters / kg of the product x value
+#   thickness_mm            mean layer thickness used for kg = area x mm x kg/m2/mm
+#   (layout waste for tile and laminate lives in waste_coefficients.yaml, same condition model)
+# Pages read 2026-10-20.
+corrections:
+  - id: paint-absorbent
+    work: wall_painting
+    material: water_dispersion_paint
+    condition: {surface: absorbent}
+    effect: {type: consumption_multiplier, value: 1.43}
+    reason: "шероховатое впитывающее основание: укрывистость ниже, краски уходит больше"
+    source:
+      kind: manufacturer
+      name: "Tikkurila Prof Euro 7, Product Data Sheet"
+      url: "https://tikkurila.com/sites/default/files/prof-euro-7-en-pds-tikkurila-1655905744.pdf"
+      quote: "10-14 m²/l on smooth non-absorbent surface; 7-9 m²/l on rough absorbent surface"
+      note: "коэффициент = 10 / 7 (нижние границы диапазонов, как и для расхода по умолчанию)"
+  - id: paint-smooth
+    work: wall_painting
+    material: water_dispersion_paint
+    condition: {surface: smooth}
+    effect: {type: consumption_multiplier, value: 1.0}
+    reason: "гладкое невпитывающее основание: расход по карточке товара"
+    source: {kind: manufacturer, name: "Tikkurila Prof Euro 7, Product Data Sheet",
+             url: "https://tikkurila.com/sites/default/files/prof-euro-7-en-pds-tikkurila-1655905744.pdf",
+             quote: "10-14 m²/l on smooth non-absorbent surface"}
+  - id: putty-even
+    work: puttying
+    material: finish_putty
+    condition: {evenness: even}
+    effect: {type: thickness_mm, value: 1}
+    reason: "ровные стены: тонкий финишный слой, нижняя граница рекомендуемой толщины"
+    source: {kind: manufacturer, name: "Vetonit Finish, страница продукта vetonit.com",
+             url: "https://vetonit.com/products/shtukaturki-shpaklevki/vetonit-finish",
+             quote: "рекомендуемая толщина слоя за одно нанесение 1–3 мм"}
+  - id: putty-uneven
+    work: puttying
+    material: finish_putty
+    condition: {evenness: uneven}
+    effect: {type: thickness_mm, value: 3}
+    reason: "неровные стены: слой до предельной толщины за один проход, выравнивание"
+    source: {kind: manufacturer, name: "Ceresit CT 225, техническое описание",
+             url: "https://datasheets.tdx.henkel.com/CERESIT-CT-225-WHITE-uk_UA.pdf",
+             quote: "Товщина шару за одне нанесення — до 3 мм (шпаклювання)"}
+  - id: plaster-manual
+    work: plastering
+    material: gypsum_plaster
+    condition: {application: manual}
+    effect: {type: consumption_multiplier, value: 1.0}
+    reason: "ручное нанесение: расход по карточке (КНАУФ-Ротбанд 8,5 кг/м² при 10 мм)"
+    source: {kind: manufacturer, name: "КНАУФ-Ротбанд, лист расхода",
+             url: "https://knauf.by/upload/iblock/dac/Knauf_IL_Rotband_07_06_19_preview_v4.pdf",
+             quote: "КНАУФ-Ротбанд кг 8,5*; средняя толщина слоя 10 мм",
+             note: "сноска «*» листа не прочитана: основа расхода не подтверждена"}
+  - id: plaster-machine
+    work: plastering
+    material: gypsum_plaster
+    condition: {application: machine}
+    effect: {type: consumption_multiplier, value: 1.18}
+    reason: "машинное нанесение: выше расход смеси на тот же слой"
+    source: {kind: derived, name: "КНАУФ-МП 75 (машинная, 10 кг/м² при 10 мм) к Ротбанду (8,5)",
+             url: "https://knauf.com/ru-UZ/p/produkt/knauf-mp-75-10256_0604",
+             quote: "расход при слое 10 мм около 10 кг/м²",
+             note: "10 / 8,5 = 1,18; два разных продукта Кнауф, оценка порядка величины"}

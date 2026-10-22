@@ -1,0 +1,63 @@
+# SYNTHETIC gold set for attribute extraction.
+# Product strings are written by the team in the style of real catalog entries; they are NOT
+# real Maxidom records. `expected` lists EVERY attribute a careful human reads from the text
+# (labelled from the text alone, before running the extractor). Anything extracted beyond it counts
+# as a false positive. Replace/extend with real catalog rows once organiser data is available.
+cases:
+  - {id: e01, category: "Обои > Виниловые", name: "Обои виниловые на флизелине Erismann Fantasy 1,06 x 10,05 м",
+     expected: {roll_width_m: 1.06, roll_length_m: 10.05}}
+  - {id: e02, category: "Обои > Бумажные", name: "Обои бумажные 0,53х10 м Саратов",
+     expected: {roll_width_m: 0.53, roll_length_m: 10}}
+  - {id: e03, category: "Обои", name: "Обои под покраску флизелиновые 1,06х25 м",
+     expected: {roll_width_m: 1.06, roll_length_m: 25}}
+  - {id: e04, category: "Обои", name: "Обои Эрисманн 1,06х10,05 м", characteristics: {"Раппорт": "64 см"},
+     expected: {roll_width_m: 1.06, roll_length_m: 10.05, rapport_cm: 64}}
+  - {id: e05, category: "Плитка > Настенная", name: "Плитка настенная Kerama Marazzi Салинас 20x30 см белая",
+     expected: {tile_w_mm: 200, tile_h_mm: 300}}
+  - {id: e06, category: "Плитка > Керамогранит", name: "Керамогранит Italon Стоун 600x600 мм матовый",
+     description: "В упаковке 4 шт., 1,44 м2",
+     expected: {tile_w_mm: 600, tile_h_mm: 600, pcs_per_pack: 4, m2_per_pack: 1.44}}
+  - {id: e07, category: "Напольные покрытия > Ламинат", name: "Ламинат Tarkett Woodstock 32 класс 1292x194x8 мм (2,005 м2/уп)",
+     expected: {length_mm: 1292, width_mm: 194, thickness_mm: 8, wear_class: 32, m2_per_pack: 2.005}}
+  - {id: e08, category: "Строительные смеси > Клей", name: "Клей плиточный Ceresit CM 11 PRO, 25 кг",
+     expected: {pack_mass_kg: 25}}
+  - {id: e09, category: "Краски", name: "Краска водоэмульсионная Dulux Ослепительно белая 2,5 л",
+     expected: {pack_volume_l: 2.5}}
+  - {id: e10, category: "Строительные смеси > Шпатлевки", name: "Шпатлевка финишная Vetonit LR+ 20 кг",
+     expected: {pack_mass_kg: 20}}
+  - {id: e11, category: "Строительные смеси > Грунтовки", name: "Грунтовка глубокого проникновения Ceresit CT 17, 10 л",
+     expected: {pack_volume_l: 10}}
+  - {id: e12, category: "Электротовары > Розетки", name: "Розетка накладная влагозащищенная IP44 белая",
+     expected: {ip_rating: 44}}
+  - {id: e13, category: "Плитка > Затирки", name: "Затирка цементная Ceresit CE 40 2 кг",
+     expected: {pack_mass_kg: 2}}
+  - {id: e14, category: "Краски", name: "Краска фасадная 9 л", description: "Расход: 10-12 м2/л в один слой",
+     expected: {pack_volume_l: 9, spread_m2_per_l: 10}}
+  - {id: e15, category: "Строительные смеси > Наливные полы", name: "Самовыравнивающаяся смесь Ceresit CN 68 25 кг",
+     description: "Расход сухой смеси около 1,8 кг/м2 на 1 мм толщины слоя",
+     expected: {pack_mass_kg: 25, consumption_kg_per_m2_per_mm: 1.8}}
+  - {id: e16, category: "Строительные смеси > Штукатурки", name: "Штукатурка гипсовая Knauf Ротбанд 30 кг",
+     description: "Расход 8,5 кг/м2 при толщине слоя 10 мм",
+     expected: {pack_mass_kg: 30, consumption_kg_per_m2_per_mm: 0.85}}
+  - {id: e17, category: "Плинтусы", name: "Плинтус напольный пластиковый 2,5 м", expected: {}}
+  - {id: e18, category: "Гипсокартон > Профили", name: "Профиль потолочный CD 60x27 мм 3 м", expected: {}}
+  - {id: e19, category: "Утеплители", name: "Пленка полиэтиленовая строительная 1x10 м", expected: {}}
+  - {id: e20, category: "Инструмент", name: "Молоток слесарный 500 г", expected: {}}
+  - {id: e21, category: "Напольные покрытия > SPC", name: "Кварцвиниловая плитка SPC 34 класс 1220x180x4 мм",
+     description: "В упаковке 2,2 м2",
+     expected: {length_mm: 1220, width_mm: 180, thickness_mm: 4, wear_class: 34, m2_per_pack: 2.2}}
+  - {id: e22, category: "Напольные покрытия > Ламинат", name: "Ламинат Egger",
+     characteristics: {"Класс износостойкости": "33", "Толщина, мм": "8", "Площадь в упаковке, м2": "2,131", "Размер": "1291x193"},
+     expected: {wear_class: 33, thickness_mm: 8, m2_per_pack: 2.131, length_mm: 1291, width_mm: 193}}
+  - {id: e23, category: "Обои", name: "Обои флизелиновые 1,06 м x 10,05 м",
+     expected: {roll_width_m: 1.06, roll_length_m: 10.05}}
+  - {id: e24, category: "Краски", name: "Краска интерьерная Tikkurila Euro 2 0,9 л",
+     expected: {pack_volume_l: 0.9}}
+  - {id: e25, category: "Краски > Эмали", name: "Эмаль ПФ-115 белая 1,9 кг",
+     expected: {pack_mass_kg: 1.9}}
+  - {id: e26, category: "Плитка > Напольная", name: "Плитка напольная 33x33 Керамин Нью-Йорк",
+     expected: {tile_w_mm: 330, tile_h_mm: 330}}
+  - {id: e27, category: "Гипсокартон", name: "Гипсокартон влагостойкий Knauf ГКЛВ 2500x1200x12,5 мм",
+     expected: {length_mm: 2500, width_mm: 1200, thickness_mm: 12.5}}
+  - {id: e28, category: "Крепеж", name: "Дюбель-гвоздь 6x40 мм, 100 шт. в упаковке",
+     expected: {pcs_per_pack: 100}}

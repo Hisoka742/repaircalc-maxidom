@@ -1,0 +1,29 @@
+# Product ROLE head: what a product is in a repair, independent of the work type.
+#   main       - the thing a calculator quantifies (tile, paint, wallpaper, laminate, drywall sheet...)
+#   accessory  - goes WITH a main product and is offered as a companion (profiles, corners, crosses,
+#                fasteners, trims, mounting parts); never counted as the main product of a calculator
+#   tool       - used by the worker, not consumed
+#   consumable - consumed by the process (discs, drills, sandpaper, masking tape, film)
+#   ppe        - personal protective equipment (offered as companions, not as a work label)
+#   other      - not a repair product (catalog departments outside repair)
+# Rules are checked in this order; the first match wins. `cat` is a regex over the lower-case lifted
+# category path, `name` over the lower-case name (both optional; a rule needs at least one).
+order: [ppe, consumable, tool, accessory]
+ppe:
+  - {name: '^(перчатк|очки|респиратор|наколенник|маска|щиток|беруш|наушники|каска|защитн)'}
+  - {cat: 'средства защиты|перчатки, рукавицы|очки защитные|респираторы|каски, шлемы'}
+consumable:
+  - {cat: 'расходные материалы|системы выравнивания плитки|крестики для|бумага шлифовальная|свёрла|сверла|буры|биты|коронки|диски отрезные|круги шлифовальные|сетка шлифовальная|шкурка|абразив'}
+  - {cat: 'ленты малярные|пленки защитные|пленка стретч|мешки строительные|скобы и гвозди для|ветошь'}
+  - {name: 'шкурка|абразивн|лента малярная|скотч|вкладыш в ванночку|пленка защитная|сверло|бур |коронка'}
+tool:
+  - {cat: '^(электроинструмент|ручной инструмент|строительное оборудование)\b'}
+  - {cat: 'малярно-штукатурный инструмент|шпатели|валики|кисти малярные|ручки для валиков|ванночки для краски|сопутствующий малярный|наборы мши|пистолеты для|стремянки|правила|кельмы|терки|шлифовщики'}
+  - {name: '^(шпатель|валик|кисть|нож |ножовка|молоток|уровень|рулетка|отвертка|дрель|шуруповерт|перфоратор|лобзик|степлер|плиткорез|стремянка|миксер)'}
+accessory:
+  - {cat: 'профили и аксессуары для гипсокартона|профили (п|ш|т|н|г|l)-образные|профили декоративные|профили монтажные|профили и крепления|комплектующие|аксессуары|закладки для плитки|уголки и бордюры для плитки|уголки крепежные|уголки, галтели|молдинги|плинтусы потолочные|углы для плинтуса|резцы для плиткорезов|планки для|заглушки'}
+  - {cat: 'саморезы, шурупы|дюбели|анкеры|болты, гайки|метизы|крепления, проушины|крепеж|клипсы для|хомуты'}
+  - {cat: 'терморегуляторы для теплых полов|датчики для теплого пола'}
+  - {name: '^(профиль|уголок|заглушка|крестик|подвес|соединитель|держатель|планка|накладка|кронштейн|петля|клипса)'}
+# calculators in which `accessory` products must NOT be counted as the main product
+main_calcs: [drywall, tile, laminate, wallpaper, paint, primer, putty, self_leveling, underlay]

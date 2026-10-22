@@ -1,0 +1,239 @@
+# Golden cases. `source` says how the expected value was obtained:
+#   hand-derived: computed by hand from the formula named in the engine docstring (NOT yet
+#                 cross-checked against a manufacturer calculator -- verified: false).
+#   Replace/extend with manufacturer sheet / organiser reference values; set verified: true
+#   and put the URL in `source_url`.
+# kind: pack = integer purchasable units (must match exactly); continuous = tolerance allowed.
+cases:
+  - id: wp-001
+    calc: wallpaper_rolls
+    kind: pack
+    inputs: {length: 4, width: 3, height: 2.5, roll_width: 1.06, roll_length: 10.05,
+             openings: [{kind: door, w: 0.9, h: 2.05, wall: 0}]}
+    expected: 5   # strip 2.6 -> 3/roll; strips 3+3+4+3=13 -> ceil(13/3)
+    source: hand-derived
+    verified: false
+  - id: wp-002
+    calc: wallpaper_rolls
+    kind: pack
+    inputs: {length: 4, width: 3, height: 2.5, roll_width: 0.53, roll_length: 10.05, rapport: 0.64}
+    expected: 10  # strip 3.2 -> 3/roll; strips 28 -> 10
+    source: hand-derived
+    verified: false
+  - id: wp-003
+    calc: wallpaper_rolls
+    kind: pack
+    inputs: {length: 4, width: 3, height: 2.5, roll_width: 0.53, roll_length: 10.05,
+             rapport: 0.64, reserve: 1}
+    expected: 11
+    source: hand-derived
+    verified: false
+  - id: paint-001
+    calc: paint_liters
+    kind: continuous
+    inputs: {area: 30, spread: 10, layers: 2}
+    expected: 6
+    source: hand-derived
+    verified: false
+  - id: paint-002
+    calc: paint_liters
+    kind: continuous
+    inputs: {area: 30, spread: 10, layers: 2, porous: true}
+    expected: 6.6
+    source: hand-derived
+    verified: false
+  - id: putty-001
+    calc: putty_bags
+    kind: pack
+    inputs: {area: 30, thickness_mm: 2, rate: 1.1, bag_kg: 25}
+    expected: 3
+    source: hand-derived
+    verified: false
+  - id: tile-001
+    calc: tile_packs
+    kind: pack
+    inputs: {area: 12, layout: straight, tile_w: 300, tile_h: 300, m2_per_pack: 1.44}
+    expected: 9
+    source: hand-derived
+    verified: false
+  - id: tile-002
+    calc: tile_packs
+    kind: pack
+    inputs: {area: 12, layout: straight, tile_w: 300, tile_h: 300, pcs_per_pack: 10}
+    expected: 15
+    source: hand-derived
+    verified: false
+  - id: grout-001
+    calc: grout_kg
+    kind: continuous
+    inputs: {area: 12, tile_w: 300, tile_h: 300, thickness: 8, joint: 3, density: 1.6}
+    expected: 3.072
+    source: hand-derived (Ceresit/Litokol grout formula)
+    verified: false
+  - id: lam-001
+    calc: laminate_packs
+    kind: pack
+    inputs: {area: 12, m2_per_pack: 2.131}
+    expected: 7
+    source: hand-derived
+    verified: false
+  - id: skirt-001
+    calc: skirting_pieces
+    kind: pack
+    inputs: {length: 4, width: 3, height: 2.5, piece_len: 2.5,
+             openings: [{kind: door, w: 0.9, h: 2.05, wall: 0}]}
+    expected: 6
+    source: hand-derived
+    verified: false
+  - id: pack-001
+    calc: pack_cost
+    kind: pack
+    inputs: {required: 10, packs: [{sku: a, size: 0.9, price: 500},
+                                   {sku: b, size: 2.5, price: 1100},
+                                   {sku: c, size: 9, price: 3500}]}
+    expected: 4400
+    source: hand-derived
+    verified: false
+  - id: pack-002
+    calc: pack_cost
+    kind: pack
+    inputs: {required: 9.5, packs: [{sku: a, size: 0.9, price: 500},
+                                    {sku: b, size: 2.5, price: 1100},
+                                    {sku: c, size: 9, price: 3500}]}
+    expected: 4000
+    source: hand-derived
+    verified: false
+  - id: grout-ce79-001
+    calc: grout_kg
+    kind: continuous
+    inputs: {area: 1, tile_w: 50, tile_h: 50, thickness: 5, joint: 4, density: 1.6}
+    expected: 1.3
+    tolerance: 0.05
+    source: "Ceresit CE 79 UltraPox technical description, 10.2018, table + formula (tolerance 0.05 = rounding of printed value)"
+    source_url: https://dm.henkel-dam.com/is/content/henkel/tds-ru-ceresit-ce79pdf
+    verified: true
+  - id: grout-ce79-002
+    calc: grout_kg
+    kind: continuous
+    inputs: {area: 1, tile_w: 100, tile_h: 100, thickness: 8, joint: 4, density: 1.6}
+    expected: 1.0
+    tolerance: 0.05
+    source: "Ceresit CE 79 UltraPox technical description, 10.2018, table + formula (tolerance 0.05 = rounding of printed value)"
+    source_url: https://dm.henkel-dam.com/is/content/henkel/tds-ru-ceresit-ce79pdf
+    verified: true
+  - id: grout-ce79-003
+    calc: grout_kg
+    kind: continuous
+    inputs: {area: 1, tile_w: 150, tile_h: 150, thickness: 6, joint: 6, density: 1.6}
+    expected: 0.8
+    tolerance: 0.05
+    source: "Ceresit CE 79 UltraPox technical description, 10.2018, table + formula (tolerance 0.05 = rounding of printed value)"
+    source_url: https://dm.henkel-dam.com/is/content/henkel/tds-ru-ceresit-ce79pdf
+    verified: true
+  - id: grout-ce79-004
+    calc: grout_kg
+    kind: continuous
+    inputs: {area: 1, tile_w: 100, tile_h: 200, thickness: 6, joint: 6, density: 1.6}
+    expected: 0.9
+    tolerance: 0.05
+    source: "Ceresit CE 79 UltraPox technical description, 10.2018, table + formula (tolerance 0.05 = rounding of printed value)"
+    source_url: https://dm.henkel-dam.com/is/content/henkel/tds-ru-ceresit-ce79pdf
+    verified: true
+  - id: grout-ce79-005
+    calc: grout_kg
+    kind: continuous
+    inputs: {area: 1, tile_w: 100, tile_h: 200, thickness: 10, joint: 8, density: 1.6}
+    expected: 1.9
+    tolerance: 0.05
+    source: "Ceresit CE 79 UltraPox technical description, 10.2018, table + formula (tolerance 0.05 = rounding of printed value)"
+    source_url: https://dm.henkel-dam.com/is/content/henkel/tds-ru-ceresit-ce79pdf
+    verified: true
+  - id: grout-ce79-006
+    calc: grout_kg
+    kind: continuous
+    inputs: {area: 1, tile_w: 200, tile_h: 200, thickness: 10, joint: 8, density: 1.6}
+    expected: 1.3
+    tolerance: 0.05
+    source: "Ceresit CE 79 UltraPox technical description, 10.2018, table + formula (tolerance 0.05 = rounding of printed value)"
+    source_url: https://dm.henkel-dam.com/is/content/henkel/tds-ru-ceresit-ce79pdf
+    verified: true
+  - id: adhesive-cm11-001
+    calc: adhesive_kg
+    kind: continuous
+    inputs: {area: 1, tile_w: 50, tile_h: 50}
+    expected: 1.7
+    source: "Ceresit CM 11 technical description, 01.2020, consumption table (kg/m2 by tile side / notch)"
+    source_url: https://static-ru.insales.ru/files/1/6577/12794289/original/Клей_для_плитки_универсальный_Ceresit_CM_11_PRO.pdf
+    verified: true
+  - id: adhesive-cm11-002
+    calc: adhesive_kg
+    kind: continuous
+    inputs: {area: 1, tile_w: 100, tile_h: 100}
+    expected: 2.0
+    source: "Ceresit CM 11 technical description, 01.2020, consumption table (kg/m2 by tile side / notch)"
+    source_url: https://static-ru.insales.ru/files/1/6577/12794289/original/Клей_для_плитки_универсальный_Ceresit_CM_11_PRO.pdf
+    verified: true
+  - id: adhesive-cm11-003
+    calc: adhesive_kg
+    kind: continuous
+    inputs: {area: 1, tile_w: 150, tile_h: 150}
+    expected: 2.7
+    source: "Ceresit CM 11 technical description, 01.2020, consumption table (kg/m2 by tile side / notch)"
+    source_url: https://static-ru.insales.ru/files/1/6577/12794289/original/Клей_для_плитки_универсальный_Ceresit_CM_11_PRO.pdf
+    verified: true
+  - id: adhesive-cm11-004
+    calc: adhesive_kg
+    kind: continuous
+    inputs: {area: 1, tile_w: 250, tile_h: 250}
+    expected: 3.6
+    source: "Ceresit CM 11 technical description, 01.2020, consumption table (kg/m2 by tile side / notch)"
+    source_url: https://static-ru.insales.ru/files/1/6577/12794289/original/Клей_для_плитки_универсальный_Ceresit_CM_11_PRO.pdf
+    verified: true
+  - id: adhesive-cm11-005
+    calc: adhesive_kg
+    kind: continuous
+    inputs: {area: 1, tile_w: 300, tile_h: 300}
+    expected: 4.2
+    source: "Ceresit CM 11 technical description, 01.2020, consumption table (kg/m2 by tile side / notch)"
+    source_url: https://static-ru.insales.ru/files/1/6577/12794289/original/Клей_для_плитки_универсальный_Ceresit_CM_11_PRO.pdf
+    verified: true
+  - id: adhesive-cm11-006
+    calc: adhesive_kg
+    kind: continuous
+    inputs: {area: 1, tile_w: 500, tile_h: 500}
+    expected: 5.5
+    source: "Ceresit CM 11 technical description, 01.2020, consumption table (kg/m2 by tile side / notch)"
+    source_url: https://static-ru.insales.ru/files/1/6577/12794289/original/Клей_для_плитки_универсальный_Ceresit_CM_11_PRO.pdf
+    verified: true
+  - id: waterproof-cr65-001
+    calc: waterproofing_kg
+    kind: continuous
+    inputs: {area: 1, condition: high_humidity}
+    expected: 3.5
+    source: "Ceresit CR 65 technical description (Henkel TDX RU/KZ, signed 2025-11-27), consumption table"
+    source_url: https://datasheets.tdx.henkel.com/CERESIT-CR-65-ru_KZ.pdf
+    verified: true
+  - id: waterproof-cr65-002
+    calc: waterproofing_kg
+    kind: continuous
+    inputs: {area: 1, condition: water_no_pressure}
+    expected: 4.5
+    source: "Ceresit CR 65 technical description (Henkel TDX RU/KZ, signed 2025-11-27), consumption table"
+    source_url: https://datasheets.tdx.henkel.com/CERESIT-CR-65-ru_KZ.pdf
+    verified: true
+  - id: waterproof-cr65-003
+    calc: waterproofing_kg
+    kind: continuous
+    inputs: {area: 1, condition: water_pressure}
+    expected: 6.0
+    source: "Ceresit CR 65 technical description (Henkel TDX RU/KZ, signed 2025-11-27), consumption table"
+    source_url: https://datasheets.tdx.henkel.com/CERESIT-CR-65-ru_KZ.pdf
+    verified: true
+  - id: screed-cn68-001
+    calc: layer_kg
+    kind: continuous
+    inputs: {area: 20, thickness_mm: 5, rate: 1.8}
+    expected: 180
+    source: "Ceresit CN 68 technical description (Henkel TDX RU/BY edition, 2021): ~1.8 kg/m2/mm; the Russian edition may state 1.7 (unchecked)"
+    source_url: https://datasheets.tdx.henkel.com/CERESIT-CN-68-ru_BY.pdf
+    verified: true

@@ -1,0 +1,72 @@
+{
+  "machine": {
+    "cpu": "Intel64 Family 6 Model 158 Stepping 10, GenuineIntel",
+    "cores_logical": 8,
+    "cores_physical": 4,
+    "ram_gb": 15.8,
+    "os": "Windows 10",
+    "python": "3.12.3",
+    "gpu": null
+  },
+  "stages": {
+    "load": {
+      "name": "load",
+      "seconds": 14.47432320000371,
+      "peak_rss_mb": 486.453125,
+      "cpu_percent": 99.8,
+      "items": 61346
+    },
+    "rules": {
+      "name": "rules",
+      "seconds": 2.471171199984383,
+      "peak_rss_mb": 488.6171875,
+      "cpu_percent": 100.0,
+      "items": 61346
+    },
+    "train_holdout": {
+      "name": "train_holdout",
+      "seconds": 44.09083499998087,
+      "peak_rss_mb": 695.421875,
+      "cpu_percent": 13.2,
+      "items": 32425
+    },
+    "predict_holdout": {
+      "name": "predict_holdout",
+      "seconds": 1.0762181000318378,
+      "peak_rss_mb": 563.49609375,
+      "cpu_percent": 100.0,
+      "items": 6278
+    },
+    "train_full": {
+      "name": "train_full",
+      "seconds": 46.684712500020396,
+      "peak_rss_mb": 722.55859375,
+      "cpu_percent": 16.5,
+      "items": 38703
+    },
+    "match_5000": {
+      "name": "match_all",
+      "seconds": 1.1020333000342362,
+      "peak_rss_mb": 662.90234375,
+      "cpu_percent": 100.0,
+      "items": 5000
+    }
+  },
+  "holdout": {
+    "micro_f1": 0.852318339100346,
+    "macro_f1": 0.8282333003421756,
+    "samples_f1": 0.8967305016503554,
+    "hamming_loss": 0.008290662709111959,
+    "n": 6278,
+    "held_categories": 292,
+    "non_literal": {
+      "f1": 0.869703260471364,
+      "precision": 0.8440388717705617,
+      "recall": 0.896977329974811,
+      "pairs": 3970
+    },
+    "kind": "SILVER (labels = rules)"
+  },
+  "model_mb": 58.1,
+  "products": 61346
+}

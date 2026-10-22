@@ -1,0 +1,76 @@
+# Knowledge base for the "why these materials" explanation (RAG over curated facts).
+# Each fact is short, Russian, and traceable: `source` says where it comes from. Facts about
+# consumption are the ones the engine actually uses (engine/materials), so an explanation can
+# never contradict the calculation. Tags: `calc` (product type), `room` (room type), `overlay`.
+facts:
+  - id: drywall-wet
+    calc: [drywall]
+    room: [bathroom]
+    overlay: [wet_zone]
+    text: "Во влажных помещениях применяют влагостойкий гипсокартон (ГКЛВ): обычный лист набирает влагу и теряет прочность."
+    source: "Правила помещений Maxicalc (room_rules.yaml)"
+  - id: paint-wet
+    calc: [paint]
+    room: [bathroom, kitchen]
+    overlay: [wet_zone]
+    text: "В ванной и на кухне краска должна быть влагостойкой или моющейся: стены протирают, а на них оседает пар."
+    source: "Правила помещений Maxicalc (room_rules.yaml)"
+  - id: paint-layers
+    calc: [paint, primer]
+    text: "Расход краски в карточке указан на один слой; для ровного цвета считаем два слоя, а потолок красится вместе со стенами."
+    source: "Формулы движка (engine/materials/coatings.py)"
+  - id: primer-why
+    calc: [primer, paint, putty, wallpaper]
+    text: "Грунтовка выравнивает впитывание основания и улучшает сцепление, поэтому её добавляют под краску, шпатлёвку и обои."
+    source: "Правила состава работ Maxicalc (presets.yaml)"
+  - id: tile-cut
+    calc: [tile]
+    text: "Плитку берут с запасом на подрезку и бой; величина запаса зависит от раскладки (прямая, диагональная)."
+    source: "Формулы движка (engine/materials/tile.py)"
+  - id: tile-antislip
+    calc: [tile]
+    room: [bathroom, balcony]
+    overlay: [wet_zone]
+    text: "На мокрых полах безопаснее противоскользящая плитка."
+    source: "Правила помещений Maxicalc (room_rules.yaml)"
+  - id: waterproofing
+    calc: [waterproofing, tile_adhesive, tile]
+    room: [bathroom]
+    overlay: [wet_zone]
+    text: "Под плитку в санузле делают гидроизоляцию: весь пол и стены на 0,3 м выше пола, а в зоне душа — на полную высоту."
+    source: "Допущения движка (engine/materials/waterproofing.py)"
+  - id: laminate-wear
+    calc: [laminate]
+    room: [hallway]
+    overlay: [heavy_traffic]
+    text: "В прихожей и других местах с высокой нагрузкой нужен ламинат не ниже 33 класса износостойкости."
+    source: "Правила помещений Maxicalc (room_rules.yaml)"
+  - id: laminate-underlay
+    calc: [laminate, underlay]
+    text: "Под ламинат укладывают подложку; её количество равно площади пола, а плинтус считают по периметру без дверных проёмов."
+    source: "Формулы движка (engine/materials/flooring.py, skirting.py)"
+  - id: kids-emission
+    calc: [paint, wallpaper, wallpaper_glue]
+    room: [kids]
+    text: "В детской выбирают материалы с низкой эмиссией (классы E0/E1)."
+    source: "Правила помещений Maxicalc (room_rules.yaml)"
+  - id: kitchen-washable
+    calc: [paint, wallpaper]
+    room: [kitchen]
+    text: "На кухне стены должны мыться: выбирают моющиеся краски и обои."
+    source: "Правила помещений Maxicalc (room_rules.yaml)"
+  - id: balcony-frost
+    calc: [paint, primer, putty, tile_adhesive, grout]
+    room: [balcony]
+    text: "На неотапливаемом балконе материалы должны быть морозостойкими."
+    source: "Правила помещений Maxicalc (room_rules.yaml)"
+  - id: wallpaper-strips
+    calc: [wallpaper]
+    text: "Обои считают полотнами по стенам, а не по площади: длина полотна — высота стены с припуском, с учётом раппорта."
+    source: "Формулы движка (engine/materials/wallpaper.py)"
+  - id: round-once
+    text: "Количество округляется до целых упаковок один раз, в конце, после суммирования по всем помещениям: так не покупается лишнего."
+    source: "Принцип расчёта Maxicalc"
+  - id: rating-rank
+    text: "Среди равнозначных по требованиям товаров выше стоят более популярные (по рейтингу и просмотрам), но требования помещения всегда важнее популярности."
+    source: "Логика ранжирования Maxicalc (recommend/select.py)"

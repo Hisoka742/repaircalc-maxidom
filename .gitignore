@@ -1,0 +1,31 @@
+# environments and caches
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.hypothesis/
+node_modules/
+frontend/dist/
+frontend/portrait-source/
+
+# data, models and run outputs (the organizers' dataset is never committed)
+data/
+!data/.gitkeep
+products_final.json
+out/
+*.joblib
+.env
+
+# local assistant / planning files (kept on the authors' machines only)
+.claude/
+.impeccable/
+CLAUDE.md
+PRODUCT.md
+MAXIDOM_HACKATHON_PLAN.md
+CLAUDE_CODE_CHECKLIST.md
+docs/AUDIT.md
+docs/SUMMARY.md
+docs/PROGRESS.md
+docs/RESUME_AFTER_CHECKPOINT.md

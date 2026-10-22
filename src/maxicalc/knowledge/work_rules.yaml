@@ -1,0 +1,248 @@
+# Rule layer of the work-type matcher: product (category path + name) -> work types with a ROLE.
+# role: m = material, t = tool, c = consumable / supporting material (see docs/TAXONOMY.md).
+# A product receives the UNION of all rules it matches. `cat` is a regex over the lower-case
+# category path joined with " > " (ё -> е); `name` (optional) a regex over the lower-case name;
+# `not_name` excludes. Products with no matching rule get no work type (out of repair scope).
+# The rules are the teacher of the learned model (weak labels) and a fallback; the human gold set
+# overrides both. Keep rules specific: a vague rule is worse than none.
+rules:
+  # ------------------------------------------------------------------ paints, primers, coatings
+  - {id: paint-wall, cat: "краски для стен и потолков",
+     works: {wall_painting: m, ceiling_painting: m}}
+  - {id: paint-facade, cat: "краски фасадные", works: {wall_painting: m}}
+  - {id: paint-floor, cat: "краски для пола", works: {wood_metal_coating: m}}
+  - {id: paint-misc, cat: "краски и эмали > (краски для мебели|краски масляные|краски по металлу|краски специальные|краски термостойкие|эмали универсальные|краски аэрозольные)",
+     works: {wood_metal_coating: m}}
+  - {id: varnish, cat: "краска и малярный инструмент > лаки", works: {wood_metal_coating: m}}
+  - {id: wood-protect, cat: "средства защитные для дерева > (антисептики защитно|масла|морилки)",
+     works: {antiseptic: m, wood_metal_coating: m}}
+  - {id: wood-primer-antiseptic, cat: "антисептики грунтовочные",
+     works: {antiseptic: m, priming: m}}
+  - {id: fire-bio, cat: "антисептики огнебиозащитные", works: {antiseptic: m}}
+  - {id: primer, cat: "грунты, пропитки, олифы > (грунтовка|бетонконтакт|мастики и праймеры|грунты аэрозольные)",
+     works: {priming: m, wall_painting: c, ceiling_painting: c, tile_laying: c, wallpapering: c,
+             puttying: c, plastering: c}}   # walls only; floors via work_refine (card text)
+  - {id: primer-metal, cat: "грунты по металлу", works: {wood_metal_coating: m, priming: m}}
+  - {id: waterproof-poly, cat: "(гидроизоляция полимерная|аксессуары для гидроизоляции|гидрофобизатор)",
+     works: {waterproofing: m, tile_laying: c}}
+  - {id: bitumen-mastic, cat: "мастики и праймеры", name: "битум|гидроизоляц",
+     works: {waterproofing: m}}
+  - {id: biocide, cat: "средства биоцидные", works: {antiseptic: m, surface_cleaning: c}}
+  - {id: olifa, cat: "грунты, пропитки, олифы > (олифа|стекло жидкое|добавки специальные)",
+     works: {wood_metal_coating: m, screed: c}}
+  - {id: decorative, cat: "декоративные покрытия", works: {decorative_coating: m}}
+  - {id: tint-paste, cat: "пасты колеровочные", works: {wall_painting: c, ceiling_painting: c}}
+  - {id: solvent, cat: "растворители и очистители",
+     works: {wood_metal_coating: c, wall_painting: c, surface_cleaning: c}}
+  - {id: paint-remover, cat: "смывка для красок", works: {surface_cleaning: m}}
+  - {id: rust-converter, cat: "преобразователи и растворители ржавчины",
+     works: {wood_metal_coating: c, surface_cleaning: m}}
+  - {id: special-agents, cat: "растворители, специальные средства > специальные средства",
+     works: {surface_cleaning: c}}
+  # ---------------------------------------------------------------------- painting tools
+  - {id: painting-tool, cat: "малярно-штукатурный инструмент > (валики|кисти малярные|ванночки|ведра для краски|ковши для краски|ручки для валиков|макловица|сопутствующий малярный|наборы мши)",
+     works: {wall_painting: t, ceiling_painting: t, wood_metal_coating: t, priming: t,
+             decorative_coating: t}}
+  - {id: masking-tape, cat: "ленты малярные", works: {wall_painting: c, ceiling_painting: c,
+     wood_metal_coating: c}}
+  - {id: protective-film, cat: "(пленки защитные|пленка стретч)",
+     works: {wall_painting: c, ceiling_painting: c, puttying: c, plastering: c, demolition: c}}
+  - {id: spatula, cat: "малярно-штукатурный инструмент > шпатели",
+     works: {puttying: t, plastering: t, crack_repair: t, decorative_coating: t, wallpapering: t,
+             surface_cleaning: t}}
+  - {id: spatula-toothed, cat: "малярно-штукатурный инструмент > (шпатели|кельмы)", name: "зубч|гребенчат",
+     works: {tile_laying: t, linoleum_laying: t}}
+  - {id: trowel, cat: "малярно-штукатурный инструмент > кельмы",
+     works: {plastering: t, tile_laying: t, masonry: t}}
+  - {id: abrasive, cat: "малярно-штукатурный инструмент > (бумага шлифовальная|шкурка|сетка шлифовальная|лента шлифовальная|флис шлифовальный|шлифовщики)",
+     works: {surface_cleaning: c, puttying: c, wood_metal_coating: c, crack_repair: c}}
+  - {id: paint-mesh, cat: "малярно-штукатурный инструмент > сетки малярные",
+     works: {puttying: c, crack_repair: c, drywall_install: c, plastering: c}}
+  - {id: sponge, cat: "малярно-штукатурный инструмент > губки и блоки",
+     works: {grouting: t, puttying: t, tile_laying: t}}
+  # ---------------------------------------------------------------------------- tile
+  - {id: tile, cat: "плитка > (керамогранит|плитка для ванной|плитка для кухни|плитка мозаика|плитка напольная|плитка уличная|декоры и бордюры)",
+     works: {tile_laying: m}}
+  - {id: tile-plaster, cat: "плитка гипсовая", works: {decorative_coating: m, wall_panels: m}}
+  - {id: tile-grout, cat: "клей, затирки для плитки и камня > затирки", works: {grouting: m}}
+  - {id: tile-glue, cat: "клей, затирки для плитки и камня > (клеи для плитки|клеи и затирки)",
+     works: {tile_laying: m}}
+  - {id: tile-glue-stone, cat: "клеи и затирки для искусственного камня",
+     works: {tile_laying: m, grouting: m, decorative_coating: m}}
+  - {id: tile-trim, cat: "профили для плитки > закладки", works: {tile_laying: c}}
+  - {id: tile-tool, cat: "инструмент для плитки",
+     works: {tile_laying: t}}
+  - {id: tile-spacers, cat: "инструмент для плитки > (крестики|системы выравнивания|клещи для свп)",
+     works: {tile_laying: c}}
+  - {id: tile-grout-tool, cat: "инструмент для плитки > расшивки", works: {grouting: t}}
+  # --------------------------------------------------------------------------- floors
+  - {id: laminate, cat: "напольные покрытия > (ламинат|паркет|специальные пвх покрытия)",
+     works: {laminate_laying: m}}
+  - {id: linoleum, cat: "напольные покрытия > (линолеум|ковролин|ковровые дорожки|грязезащитные|искуcctвенная трава|искусственная трава)",
+     works: {linoleum_laying: m}}
+  - {id: underlay, cat: "напольные покрытия > подложка",
+     works: {laminate_laying: m, linoleum_laying: c}}
+  - {id: floor-glue, cat: "клей, средства для монтажа напольных покрытий",
+     works: {linoleum_laying: c, laminate_laying: c}}
+  - {id: skirting, cat: "плинтусы и комплектующие к ним", works: {skirting_install: m}}
+  - {id: floor-profile, cat: "профили переходные",
+     works: {skirting_install: m, laminate_laying: c, linoleum_laying: c}}
+  - {id: floor-tool, cat: "инструменты для работы с напольными",
+     works: {laminate_laying: t, linoleum_laying: t, skirting_install: t}}
+  # -------------------------------------------------------------------------- wallpaper
+  - {id: wallpaper, cat: "обои, пленка самоклеящаяся > (обои|обои под покраску|стеклообои)$",
+     works: {wallpapering: m}}
+  - {id: wallpaper-paint, cat: "обои под покраску|стеклообои", works: {wallpapering: m, wall_painting: c}}
+  - {id: wallpaper-glue, cat: "клей, средства для обоев", works: {wallpapering: m}}
+  - {id: sticker-film, cat: "(наклейки на стену|пленка самоклеящаяся)", works: {decorative_coating: m}}
+  - {id: wall-panels, cat: "панели настенные и комплектующие > (панели|декоративные стеновые|рейки декоративные|панели самоклеящиеся)",
+     works: {wall_panels: m}}
+  - {id: panel-accessories, cat: "панели настенные и комплектующие > (комплектующие к панелям|уголки, галтели|декоративные элементы|молдинги)",
+     works: {wall_panels: c, skirting_install: m}}   # decorative moldings -> skirting / moldings
+  - {id: facade-panels, cat: "панели настенные и комплектующие > (фасадные панели|сайдинг|аксессуары для сайдинга|аксессуары для фасадных)",
+     works: {wall_panels: m}}
+  # ------------------------------------------------------------ construction materials
+  - {id: mix-plaster, cat: "строительные смеси", name: "штукатур|ротбанд|гипсов",
+     works: {plastering: m}}
+  - {id: mix-putty, cat: "строительные смеси", name: "шпатл|шпакл",
+     works: {puttying: m, crack_repair: m}}
+  - {id: mix-screed, cat: "строительные смеси", name: "стяжк|пескобетон|цементно-песчан|м-?\\d{3}",
+     works: {screed: m}}
+  - {id: mix-self-level, cat: "строительные смеси", name: "наливн|самовыравн|ровнител",
+     works: {self_leveling: m}}
+  - {id: mix-tile-glue, cat: "строительные смеси", name: "плиточн|клей",
+     works: {tile_laying: m}}
+  - {id: mix-masonry, cat: "строительные смеси", name: "кладочн|монтажн.*смесь",
+     works: {masonry: m}}
+  - {id: mix-waterproof, cat: "строительные смеси", name: "гидроизол|обмазочн",
+     works: {waterproofing: m}}
+  - {id: glue-wall-tile, cat: "строительные материалы > клей", name: "плиточ|плитк|керамогранит",
+     works: {tile_laying: m}}
+  - {id: glue-assembly, cat: "строительные материалы > клей", name: "монтаж|жидкие гвозди|универсальн|контактн|эпоксид",
+     works: {general_assembly: m, skirting_install: c, wall_panels: c, door_install: c}}
+  - {id: sealant, cat: "герметики, пены монтажные > (герметики|герметик)",
+     works: {sealing: m}}
+  - {id: sealant-sanitary, cat: "герметики, пены монтажные > герметики", name: "санитарн|силиконов",
+     works: {plumbing_fixtures: c, tile_laying: c, window_install: c, faucet_install: c}}
+  - {id: foam, cat: "герметики, пены монтажные > (пены|клей-пены)",
+     works: {door_install: c, window_install: c, insulation: m, sealing: m, slopes: c}}
+  - {id: foam-cleaner, cat: "очистители пен", works: {door_install: c, window_install: c}}
+  - {id: drywall, cat: "гипсокартон и приспособления для монтажа",
+     works: {drywall_install: m, ceiling_install: m}}
+  - {id: insulation, cat: "теплозвукоизоляционные", works: {insulation: m}}
+  - {id: warm-floor, cat: "теплые полы", works: {underfloor_heating: m, screed: c}}
+  - {id: build-consumables, cat: "расходные материалы для строительных работ",
+     works: {general_assembly: c}}
+  - {id: plaster-mesh, cat: "сетки сварные, штукатурные",
+     works: {plastering: c, screed: c, masonry: c}}
+  - {id: plank-timber, cat: "пиломатериалы, погонаж",
+     works: {skirting_install: m, door_install: c, general_assembly: m}}
+  - {id: plastic-sheet, cat: "пластик листовой", works: {wall_panels: m, slopes: m}}
+  - {id: aggregate, cat: "керамзит, известь, щебень", works: {screed: c, insulation: c, masonry: c}}
+  - {id: bricks, cat: "(кирпич|стеновые блоки)", works: {masonry: m}}
+  - {id: sheet-board, cat: "древесно-плитные материалы", name: "фанер|осб|osb|дсп|двп",
+     works: {general_assembly: m, door_install: c}}
+  - {id: cement-board, cat: "цементно-стружечная", works: {screed: m, wall_panels: c}}
+  # ---------------------------------------------------------------------- electrical
+  - {id: cable, cat: "кабель мерный", works: {cable_laying: m}}
+  - {id: electro-install, cat: "все для электромонтажа", works: {cable_laying: c}}
+  - {id: electro-boxes, cat: "все для электромонтажа", name: "коробк|подрозетник|монтажн",
+     works: {sockets_switches: c, cable_laying: c}}
+  - {id: sockets, cat: "электротовары > (выключатели|розетки|переключатели|блоки комбинированные)",
+     works: {sockets_switches: m}}
+  - {id: panel, cat: "электрощитовая продукция", works: {electrical_panel: m}}
+  - {id: lamps, cat: "освещение > лампочки и лампы", works: {lighting_install: c}}
+  - {id: luminaires, cat: "освещение > (люстры|бра|светильники|споты|точечные|светодиодные ленты|cветодиодные ленты|подсветка|свет для|комплектующие для освещения|уличные)",
+     works: {lighting_install: m}}
+  - {id: electro-tool, cat: "клещи для электропроводки", works: {cable_laying: t, sockets_switches: t}}
+  # ------------------------------------------------------------------------ plumbing
+  - {id: bath, cat: "сантехника > (ванны|душевые кабины|унитазы|раковины)",
+     works: {plumbing_fixtures: m}}
+  - {id: shower-equip, cat: "оборудование для душа", works: {plumbing_fixtures: m, faucet_install: m}}
+  - {id: faucets, cat: "сантехника > смесители", works: {faucet_install: m}}
+  - {id: pipes, cat: "инженерная сантехника > (трубы|фитинги|запорная арматура|соединители|уплотнители|приборы для учета|фильтры грубой|регулирующая|предохранительная|баки)",
+     works: {pipe_laying: m}}
+  - {id: supply-hose, cat: "инженерная сантехника > (гибкие подводки|шланги для бытовой|сифоны|выпуски|сливы|трапы|манжеты|отводы|дверцы ревизионные)",
+     works: {plumbing_fixtures: c, faucet_install: c, pipe_laying: c}}
+  - {id: heating, cat: "отопительное оборудование", works: {heating_install: m}}
+  - {id: ventilation, cat: "вентиляционное оборудование", works: {ventilation_install: m}}
+  - {id: pipe-tool, cat: "труборезы", works: {pipe_laying: t}}
+  # ------------------------------------------------------------------ doors / windows
+  - {id: doors, cat: "двери, окна, лестницы > двери", works: {door_install: m}}
+  - {id: door-hardware, cat: "скобяные изделия > (дверная фурнитура|дверные ручки)",
+     works: {door_install: m}}
+  - {id: windows, cat: "двери, окна, лестницы > (окна|подоконники)", works: {window_install: m}}
+  - {id: slopes, cat: "панели для отделки откосов", works: {slopes: m, window_install: c}}
+  # --------------------------------------------------------- fasteners (general + specific)
+  - {id: fasteners, cat: "метизы, крепежные изделия", works: {general_assembly: m}}
+  - {id: screws-drywall, cat: "саморезы, шурупы", name: "гипсокартон|гкл|острый|фосфатированн|гипсокартон",
+     works: {drywall_install: c}}
+  - {id: anchors-heavy, cat: "метизы, крепежные изделия > (анкеры|дюбели)",
+     works: {plumbing_fixtures: c, door_install: c, heating_install: c}}
+  - {id: cable-clips, cat: "метизы", name: "кабел|хомут-дюбель|скоба.*кабел",
+     works: {cable_laying: c}}
+  - {id: profiles-misc, cat: "скобяные изделия > профили", works: {general_assembly: m}}
+  # ----------------------------------------------------------------------------- tools
+  - {id: power-drill, cat: "электроинструмент > (дрели|перфораторы|гайковерты)",
+     works: {general_assembly: t, demolition: t, cable_laying: t, sockets_switches: t,
+             door_install: t, drywall_install: t}}
+  - {id: power-sander, cat: "электроинструмент > шлифовальные машины",
+     works: {surface_cleaning: t, wood_metal_coating: t, puttying: t, demolition: t}}
+  - {id: power-spray, cat: "электроинструмент > краскопульты",
+     works: {wall_painting: t, ceiling_painting: t, wood_metal_coating: t}}
+  - {id: power-mixer, cat: "электроинструмент > миксеры строительные",
+     works: {plastering: t, screed: t, self_leveling: t, puttying: t, tile_laying: t,
+             wall_painting: t}}
+  - {id: power-vac, cat: "электроинструмент > пылесосы строительные",
+     works: {surface_cleaning: t, demolition: t}}
+  - {id: power-heat, cat: "электроинструмент > фены технические",
+     works: {surface_cleaning: t, linoleum_laying: t, wood_metal_coating: t}}
+  - {id: power-saw, cat: "электроинструмент > (электропилы|лобзики|электрорубанки|фрезерные|многофункциональный)",
+     works: {general_assembly: t, laminate_laying: t, door_install: t, skirting_install: t}}
+  - {id: power-stapler, cat: "электроинструмент > (строительные степлеры|пистолеты клеевые)",
+     works: {general_assembly: t, insulation: t, wall_panels: t}}
+  - {id: power-consumables, cat: "расходные материалы для электроинструмента", name: "сверл|бур|коронк|бит|насадк",
+     works: {general_assembly: c, cable_laying: c, sockets_switches: c}}
+  - {id: power-discs, cat: "расходные материалы для электроинструмента", name: "диск|круг|полотно|пил",
+     works: {demolition: c, surface_cleaning: c, tile_laying: c, general_assembly: c}}
+  - {id: power-abrasive, cat: "расходные материалы для электроинструмента", name: "шлифов|абразив|щетк",
+     works: {surface_cleaning: c, wood_metal_coating: c, puttying: c}}
+  - {id: protection, cat: "средства защиты", works: {ppe_consumables: c}}
+  - {id: measuring, cat: "измерительный инструмент > (рулетки|уровни|нивелиры|дальномеры|отвесы|линейки|угломеры|гидроуровни|карандаши|маркеры)",
+     works: {general_assembly: t, tile_laying: t, drywall_install: t, laminate_laying: t,
+             door_install: t, wallpapering: t}}
+  - {id: hand-fasten, cat: "ручной инструмент > (отвертки|ключи|шарнирно|фиксирующий|наборы ручных)",
+     works: {general_assembly: t}}
+  - {id: hand-plumbing-keys, cat: "ключи, головки > (ключи разводные|ключи специальные)",
+     works: {pipe_laying: t, plumbing_fixtures: t, faucet_install: t}}
+  - {id: hand-electrical, cat: "ручной инструмент > (отвертки|шарнирно-губцевый)",
+     name: "диэлектр|стриппер|кусачки|бокорез|плоскогуб",
+     works: {sockets_switches: t, cable_laying: t}}
+  - {id: hand-saws, cat: "пильный инструмент", works: {general_assembly: t, skirting_install: t,
+     door_install: t, laminate_laying: t}}
+  - {id: hand-drywall-saw, cat: "пильный инструмент", name: "гипсокартон|гкл",
+     works: {drywall_install: t}}
+  - {id: knives, cat: "режущий инструмент", works: {wallpapering: t, linoleum_laying: t,
+     drywall_install: t, insulation: t, laminate_laying: t}}
+  - {id: hammers, cat: "ударно-рычажный инструмент > (зубила|ломы|кувалды|молотки|киянки)",
+     works: {demolition: t, general_assembly: t}}
+  - {id: staplers, cat: "степлеры, заклепочники", works: {general_assembly: t, insulation: t,
+     wall_panels: t}}
+  - {id: caulk-gun, cat: "пистолеты для герметика", works: {sealing: t, window_install: t,
+     door_install: t, plumbing_fixtures: t}}
+  - {id: rules-screed, cat: "специальный инструмент > правила", works: {plastering: t, screed: t,
+     puttying: t}}
+  - {id: surface-hand, cat: "инструмент для обработки поверхностей", works: {surface_cleaning: t,
+     wood_metal_coating: t}}
+  - {id: spray-pneumatic, cat: "пневматическое оборудование > (краскораспылители|компрессоры)",
+     works: {wall_painting: t, ceiling_painting: t, wood_metal_coating: t}}
+  # ------------------------------------------------------------- added after the coverage check
+  - {id: glue-floor, cat: "строительные материалы > клей > клей для напольных",
+     works: {linoleum_laying: c, laminate_laying: c}}
+  - {id: glue-pva, cat: "строительные материалы > клей > клей пва",
+     works: {general_assembly: c, priming: c, door_install: c}}
+  - {id: glue-instant, cat: "строительные материалы > клей > клей моментальный",
+     works: {general_assembly: c}}
+  - {id: vapor-membrane, cat: "паро- и ветрозащитные мембраны", works: {insulation: c}}
+  - {id: drill-bits-power, cat: "расходные материалы для электроинструмента > (зубила|фрезы)",
+     works: {demolition: c, general_assembly: c}}

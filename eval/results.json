@@ -1,0 +1,84 @@
+{
+  "generated": "2026-10-21T08:35:20Z",
+  "golden": {
+    "cases": 288,
+    "verified": 72,
+    "pack_exact": [
+      144,
+      144
+    ],
+    "mape_pct": 0.1009,
+    "mae_packs": 0.0,
+    "max_pack_error": 0.0,
+    "failures": 0,
+    "split": {
+      "manufacturer_verified": {
+        "cases": 72,
+        "packs": 26,
+        "pack_exact": 26,
+        "mae_packs": 0.0,
+        "mape_pct": 0.31585988382327057
+      },
+      "rederived": {
+        "cases": 216,
+        "packs": 118,
+        "pack_exact": 118,
+        "mae_packs": 0.0,
+        "mape_pct": 0.0
+      }
+    }
+  },
+  "extraction": {
+    "cases": 28,
+    "precision": 1.0,
+    "recall": 1.0,
+    "errors": 0
+  },
+  "matching": {
+    "items": 3000,
+    "test": 625,
+    "scenarios": [
+      {
+        "name": "rules only, category present",
+        "calc_p_at_1": 0.9744,
+        "coverage": 0.96,
+        "auto_precision": 0.935,
+        "work_macro_f1": 0.8663
+      },
+      {
+        "name": "rules + model, category present",
+        "calc_p_at_1": 0.9744,
+        "coverage": 0.936,
+        "auto_precision": 0.959,
+        "work_macro_f1": 0.8724
+      },
+      {
+        "name": "rules only, category missing",
+        "calc_p_at_1": 0.6816,
+        "coverage": 0.6816,
+        "auto_precision": 1.0,
+        "work_macro_f1": 0.8088
+      },
+      {
+        "name": "rules + model, category missing",
+        "calc_p_at_1": 1.0,
+        "coverage": 0.9888,
+        "auto_precision": 0.9175,
+        "work_macro_f1": 0.9514
+      }
+    ]
+  },
+  "recommendation": {
+    "queries": 61,
+    "gold": {
+      "ndcg5": 1.0,
+      "violations": 0,
+      "recommended": 297
+    },
+    "pipeline": {
+      "ndcg5": 0.9946,
+      "violations": 0,
+      "recommended": 295
+    }
+  }
+}

@@ -1,0 +1,76 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: maxi
+      POSTGRES_PASSWORD: maxi
+      POSTGRES_DB: maxicalc
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U maxi -d maxicalc"]
+      interval: 5s
+      retries: 10
+  redis:
+    image: redis:7-alpine
+    ports: ["6379:6379"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 10
+  # Local LLM (closed contour): Ollama on the RTX 3090. First start: `ollama pull qwen3:14b`
+  # (or: docker compose exec ollama ollama pull qwen3:14b). Remove `deploy` on a CPU-only host.
+  ollama:
+    image: ollama/ollama:latest
+    ports: ["11434:11434"]
+    volumes: ["ollama:/root/.ollama"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - {driver: nvidia, count: all, capabilities: [gpu]}
+  # ML inference layer, scaled separately from the stateless API (the case's requirement).
+  # EMBEDDER: hashing (offline baseline) | ollama:<model> | st:<sentence-transformers model>
+  inference:
+    build: .
+    command: ["uvicorn", "maxicalc.inference.app:app", "--host", "0.0.0.0", "--port", "8100"]
+    environment:
+      EMBEDDER: ollama:bge-m3
+      OLLAMA_URL: http://ollama:11434
+    ports: ["8100:8100"]
+    depends_on: [ollama]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8100/health')"]
+      interval: 10s
+      retries: 10
+  # Stand-in for the organisers' catalog API (SYNTHETIC data) so the whole ingest runs offline:
+  # point STAND_BASE_URL at http://stand-mock:9000 for development, at the real stand otherwise.
+  stand-mock:
+    build: .
+    command: ["uvicorn", "maxicalc.stand_mock:app", "--host", "0.0.0.0", "--port", "9000"]
+    environment:
+      STAND_MOCK_CATALOG: /data/catalog.csv
+    ports: ["9000:9000"]
+    volumes: ["./data:/data:ro"]
+  api:
+    build: .
+    env_file: [.env.example]
+    environment:
+      LLM_BASE_URL: http://ollama:11434/v1
+      DATABASE_URL: postgresql://maxi:maxi@postgres:5432/maxicalc
+      REDIS_URL: redis://redis:6379/0
+      CATALOG_PATH: /data/catalog.csv        # mount the catalog (CSV/XLSX/JSON/YML) here
+      MODEL_PATH: /data/model.joblib         # optional: trained matching model
+    ports: ["8000:8000"]
+    volumes: ["./data:/data:ro"]
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_healthy}
+      ollama: {condition: service_started}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8000/health')"]
+      interval: 5s
+      retries: 10
+volumes:
+  pgdata:
+  ollama:
